@@ -41,4 +41,19 @@ describe('Gameboard class.', () => {
     expect(gameboard.board[5][3]).toBe(null);
  
   })
+  test('receiveAttack() marks cells as hit and miss correctly', () => {
+    const gameboard = new Gameboard();
+    gameboard.drawBoard();
+    const placeShipTest = gameboard.placeShip(1, 3, 'vertical', 4);
+    // First: hit
+    gameboard.receiveAttack(2, 3); // hits the ship
+    expect(gameboard.board[2][3]).toBe('hit');
+
+    // Then: miss on a different cell
+    gameboard.receiveAttack(0, 0); // no ship here
+    expect(gameboard.board[0][0]).toBe('miss');
+    
+
+  })
+
 })
