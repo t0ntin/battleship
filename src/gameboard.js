@@ -1,6 +1,7 @@
 
 import { ship } from "./ship";
-
+import { makeElement } from "./cache-dom";
+import { page } from "./cache-dom";
 export class Gameboard {
   constructor() {
     this.board = []; // this is your container for 10 rows
@@ -9,13 +10,15 @@ export class Gameboard {
 
       for (let i = 0; i < 10; i++) {
         const row = []; // this is one row
-        console.log(row);
+        // console.log(row);
+        // page.grid1.append(row);
         for (let j = 0; j < 10; j++) {
+          
           row.push(null); // fill each row with 10 cells (currently empty)
         }
         this.board.push(row); // add the row to your board
       }
-      console.log(this.board);
+      // console.log(this.board);
     }
     
     checkForShips(rowIndex, colIndex, direction, length) { //created this function third
@@ -23,12 +26,12 @@ export class Gameboard {
         if (direction === 'horizontal') {
             if (this.board[rowIndex][colIndex + i] === 'ship') {
                 console.log('Cannot place ship here: overlap detected.');
-                return; // exit placeShip early
+                return true; //I had 'return' only here initially. I thought return would be the same as return true, but it's not. checkForShips() inside of placeShip() needs to be true for it to stop.
             }
         } else if (direction === 'vertical') {
             if (this.board[rowIndex + i][colIndex] === 'ship') {
                 console.log('Cannot place ship here: overlap detected.');
-                return; // exit placeShip early
+                return true; // exit placeShip early
             }
         }
       }
@@ -37,6 +40,7 @@ export class Gameboard {
     
     placeShip(rowIndex, colIndex, direction, length) { // Created this function second.
       if (this.checkForShips(rowIndex, colIndex, direction, length)) {
+        console.log('overlap found. Exiting');
         return; // overlap found, exit early
       }
       // rowIndex = 3;
