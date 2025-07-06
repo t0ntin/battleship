@@ -1,4 +1,5 @@
 import { Gameboard } from "./gameboard"
+import { Ship } from "./ship";
 
 describe('Gameboard class.', () => {
 
@@ -22,37 +23,46 @@ describe('Gameboard class.', () => {
   test('placeShip() places ships correctly', () => {
     const gameboard = new Gameboard();
     gameboard.drawBoard();
-    const placeShipTest = gameboard.placeShip(1, 3, 'vertical', 4);
-    expect(gameboard.board[1][3]).toBe('ship');
-    expect(gameboard.board[2][3]).toBe('ship');
-    expect(gameboard.board[3][3]).toBe('ship');
-    expect(gameboard.board[4][3]).toBe('ship');
+    const aircraftCarrier = new Ship(5);
+    const placeShipTest = gameboard.placeShip(aircraftCarrier, 1, 3, 'vertical', 4);
+    expect(gameboard.board[1][3]).toBe(aircraftCarrier);
+    expect(gameboard.board[2][3]).toBe(aircraftCarrier);
+    expect(gameboard.board[3][3]).toBe(aircraftCarrier);
+    expect(gameboard.board[4][3]).toBe(aircraftCarrier);
   })
 
 
   test('checkForShips() detects overlaps correctly', () => {
     const gameboard = new Gameboard();
     gameboard.drawBoard();
-    const placeShipTest = gameboard.placeShip(1, 3, 'vertical', 4);
-    const placeShipTest2 = gameboard.placeShip(3, 3, 'vertical', 4);
+    const aircraftCarrier = new Ship(5);
+    const placeShipTest = gameboard.placeShip(aircraftCarrier, 1, 3, 'vertical', 5);
+    const placeShipTest2 = gameboard.placeShip(aircraftCarrier, 2, 3, 'vertical', 5);
     expect(gameboard.board[0][3]).toBe(null);
-    expect(gameboard.board[1][3]).toBe('ship');
-    expect(gameboard.board[4][3]).toBe('ship');
-    expect(gameboard.board[5][3]).toBe(null);
+    expect(gameboard.board[1][3]).toBe(aircraftCarrier);
+    expect(gameboard.board[5][3]).toBe(aircraftCarrier);
+    expect(gameboard.board[6][3]).toBe(null);
  
   })
   test('receiveAttack() marks cells as hit and miss correctly', () => {
     const gameboard = new Gameboard();
     gameboard.drawBoard();
-    const placeShipTest = gameboard.placeShip(1, 3, 'vertical', 4);
+    const aircraftCarrier = new Ship(5);
+    const placeShipTest = gameboard.placeShip(aircraftCarrier, 1, 3, 'vertical', 5);
     // First: hit
-    gameboard.receiveAttack(2, 3); // hits the ship
-    expect(gameboard.board[2][3]).toBe('hit');
+    gameboard.receiveAttack(2, 3);
+    expect(gameboard.board[2][3] instanceof Ship).toBe(true);
+    expect(gameboard.board[2][3].numberOfHits).toBe(1);
+    expect(gameboard.board[2][3].isSunk).toBe(false);
+    expect(gameboard.board[0][0]).toBe(null);    
 
-    // Then: miss on a different cell
-    gameboard.receiveAttack(0, 0); // no ship here
-    expect(gameboard.board[0][0]).toBe('miss');
-    
+    gameboard.receiveAttack(1, 3);
+    gameboard.receiveAttack(3, 3);
+    gameboard.receiveAttack(4, 3);
+    gameboard.receiveAttack(5, 3);
+    expect(gameboard.board[2][3].isSunk).toBe(true);
+
+
 
   })
 

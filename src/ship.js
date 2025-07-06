@@ -1,4 +1,4 @@
-export class ship {
+export class Ship {
   constructor(length) {
     this.length = length;
     this.numberOfHits = 0;
@@ -9,8 +9,9 @@ export class ship {
   }
 
   determineIfSunk() {
+    if (this.numberOfHits === this.length) {
+      this.isSunk = true;
+    }
     
   }
 }
-
-
