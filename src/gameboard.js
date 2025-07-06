@@ -41,6 +41,10 @@ export class Gameboard {
   }
   
   placeShip(shipType, rowIndex, colIndex, direction, length) { // Created this function second.
+    const allFiveShipsPlaced = this.checkNumberOfShipsPlaced();
+    if (allFiveShipsPlaced === false) {
+      return;
+    }
     if (this.checkForShips(shipType, rowIndex, colIndex, direction, length)) {
       console.log('overlap found. Exiting');
       return; // overlap found, exit early
@@ -60,10 +64,10 @@ export class Gameboard {
         this.board[rowIndex +i][colIndex] = shipType;
       }
       this.placedShips.push(shipType);
-      console.log(this.placedShips);
+      // console.log(this.placedShips);
 
     }
-    console.log(JSON.stringify(this.board));
+    // console.log(JSON.stringify(this.board));
   }
 
   receiveAttack(rowIndex, colIndex) {
@@ -72,8 +76,8 @@ export class Gameboard {
       currentCell.increaseNumberOfHits();
       currentCell.determineIfSunk();
       this.countSunkShips();
-      console.log(JSON.stringify(this.board));
-      console.log(currentCell.numberOfHits);
+      // console.log(JSON.stringify(this.board));
+      // console.log(currentCell.numberOfHits);
       return 'hit';
     } else {
       currentCell = 'miss';
@@ -92,5 +96,11 @@ export class Gameboard {
     if (count === 5) {
       return true;
     } else return false;
+  }
+  checkNumberOfShipsPlaced() {
+    if (this.placedShips.length >= 5) {
+      return false;
+    } else 
+    return true;
   }
 }

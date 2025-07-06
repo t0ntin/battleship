@@ -94,4 +94,24 @@ describe('Gameboard class.', () => {
 
   }) 
 
+  test('checkNumberOfShipsPlaced() makes sure no more than 5 ships are placed', () => {
+    const gameboard = new Gameboard();
+
+    gameboard.drawBoard();
+    const aircraftCarrier = new Ship(5);
+    const aircraftCarrier2 = new Ship(5);
+    const aircraftCarrier3 = new Ship(5);
+    const aircraftCarrier4 = new Ship(5);
+    const aircraftCarrier5 = new Ship(5);
+    const aircraftCarrier6 = new Ship(5);
+    const placeShipTest = gameboard.placeShip(aircraftCarrier, 0, 0, 'vertical', aircraftCarrier.length);
+    const placeShipTest2 = gameboard.placeShip(aircraftCarrier, 0, 1, 'vertical', aircraftCarrier.length);
+    const placeShipTest3 = gameboard.placeShip(aircraftCarrier, 0, 2, 'vertical', aircraftCarrier.length);
+    const placeShipTest4 = gameboard.placeShip(aircraftCarrier, 0, 3, 'vertical', aircraftCarrier.length);
+    const placeShipTest5 = gameboard.placeShip(aircraftCarrier, 0, 4, 'vertical', aircraftCarrier.length);
+    const placeShipTest6 = gameboard.placeShip(aircraftCarrier, 0, 5, 'vertical', aircraftCarrier.length);
+    expect(gameboard.placedShips.length).toBe(5);
+
+
+  })
 })
