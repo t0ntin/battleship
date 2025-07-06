@@ -69,6 +69,29 @@ describe('Gameboard class.', () => {
     gameboard.receiveAttack(4, 3);
     gameboard.receiveAttack(5, 3);
     expect(gameboard.board[2][3].isSunk).toBe(true);
+    expect(aircraftCarrier.isSunk).toBe(true);
   })
+
+  test('countSunkShips() counts ships are sunk',() => {
+    const gameboard = new Gameboard();
+
+    gameboard.drawBoard();
+    const aircraftCarrier = new Ship(5);
+    const aircraftCarrier2 = new Ship(5);
+    const placeShipTest = gameboard.placeShip(aircraftCarrier, 1, 3, 'vertical', aircraftCarrier.length);
+    const placeShipTest2 = gameboard.placeShip(aircraftCarrier, 1, 4, 'vertical', aircraftCarrier.length);
+    gameboard.receiveAttack(1, 3);
+    gameboard.receiveAttack(2, 3);
+    gameboard.receiveAttack(3, 3);
+    gameboard.receiveAttack(4, 3);
+    gameboard.receiveAttack(5, 3);
+    gameboard.receiveAttack(1, 4);
+    gameboard.receiveAttack(2, 4);
+    gameboard.receiveAttack(3, 4);
+    gameboard.receiveAttack(4, 4);
+    gameboard.receiveAttack(5, 4);
+    expect(gameboard.placedShips.length).toBe(2);
+
+  }) 
 
 })

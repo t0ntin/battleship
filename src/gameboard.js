@@ -6,6 +6,7 @@ export class Gameboard {
   constructor() {
     this.board = []; // this is your container for 10 rows
     this.numberofShips = 0;
+    this.placedShips = [];
   }
   drawBoard() { // created this function first
 
@@ -49,6 +50,8 @@ export class Gameboard {
       for (let i = 0; i < length; i++) {
         this.board[rowIndex][colIndex +i] = shipType;
       }
+      this.placedShips.push(shipType);
+      console.log(this.placedShips);
     }
     if (direction === 'vertical' && rowIndex + length <=10) {
       // if direction is vertical, rowindex is 3, and colindex is 0, it goes to the (fourth) row, then the first column (0), then adds the rowindex to the length of the ship (7). Then it types in ship in boxes (0,3) to (0,7 which is [6)])
@@ -56,6 +59,9 @@ export class Gameboard {
 
         this.board[rowIndex +i][colIndex] = shipType;
       }
+      this.placedShips.push(shipType);
+      console.log(this.placedShips);
+
     }
     console.log(JSON.stringify(this.board));
   }
@@ -65,9 +71,9 @@ export class Gameboard {
     if (currentCell instanceof Ship) {
       currentCell.increaseNumberOfHits();
       currentCell.determineIfSunk();
+      this.countSunkShips();
       console.log(JSON.stringify(this.board));
       console.log(currentCell.numberOfHits);
-      // shipType.increaseNumberOfHits();
       return 'hit';
     } else {
       currentCell = 'miss';
@@ -76,4 +82,15 @@ export class Gameboard {
     }
   }
 
+  countSunkShips() {
+    let count = 0;
+    this.placedShips.forEach((ship) => {
+      if (ship.isSunk === true) {
+        count++
+      }
+    })
+    if (count === 5) {
+      return true;
+    } else return false;
+  }
 }
