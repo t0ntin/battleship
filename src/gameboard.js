@@ -49,7 +49,6 @@ export class Gameboard {
       for (let i = 0; i < length; i++) {
         this.board[rowIndex][colIndex +i] = shipType;
       }
-      this.createShip(length);
     }
     if (direction === 'vertical' && rowIndex + length <=10) {
       // if direction is vertical, rowindex is 3, and colindex is 0, it goes to the (fourth) row, then the first column (0), then adds the rowindex to the length of the ship (7). Then it types in ship in boxes (0,3) to (0,7 which is [6)])
@@ -57,8 +56,6 @@ export class Gameboard {
 
         this.board[rowIndex +i][colIndex] = shipType;
       }
-      // console.log(this.board[6][3]);
-
     }
     console.log(JSON.stringify(this.board));
   }
@@ -77,44 +74,6 @@ export class Gameboard {
       console.log(JSON.stringify(this.board));
       return 'miss';
     }
-    // if (this.board[rowIndex][colIndex] === 'ship') {
-    //   this.board[rowIndex][colIndex] = 'hit';
-    //   console.log(JSON.stringify(this.board));
-    //   return 'hit';
-    // } else {
-    //   this.board[rowIndex][colIndex] = 'miss';
-    //   console.log(JSON.stringify(this.board));
-    //   return 'miss';
-    // }
   }
-  
-  // createShip(length) {
-  //   if (length === 5) {
-  //     const aircraftCarrier = new Ship(length);
-  //     this.numberofShips++
-  //     console.log(aircraftCarrier);
-  //     console.log(this.numberofShips);
-  //   }
-  //   if (length === 4) {
-  //     const battleShip = new Ship(length);
-  //   }
-  //   if (length === 3) {
-  //     const cruiser = new Ship(length);
-  //   }
-  //   if (length === 2) {
-  //     const destroyer = new Ship(length);
-  //   }
-  //   return;
-  // }
 
-  trackHits() {
-
-  }
 }
-
-
-
-const ShipXl = new Ship(5);
-const ShipL = new Ship(4);
-const ShipM = new Ship(3);
-const ShipS = new Ship(2);

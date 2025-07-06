@@ -36,12 +36,20 @@ describe('Gameboard class.', () => {
     const gameboard = new Gameboard();
     gameboard.drawBoard();
     const aircraftCarrier = new Ship(5);
-    const placeShipTest = gameboard.placeShip(aircraftCarrier, 1, 3, 'vertical', 5);
-    const placeShipTest2 = gameboard.placeShip(aircraftCarrier, 2, 3, 'vertical', 5);
+    const placeShipTest = gameboard.placeShip(aircraftCarrier, 1, 3, 'vertical', aircraftCarrier.length);
+    const placeShipTest2 = gameboard.placeShip(aircraftCarrier, 2, 3, 'vertical', aircraftCarrier.length);
     expect(gameboard.board[0][3]).toBe(null);
     expect(gameboard.board[1][3]).toBe(aircraftCarrier);
     expect(gameboard.board[5][3]).toBe(aircraftCarrier);
     expect(gameboard.board[6][3]).toBe(null);
+
+    const placeShipTest3 = gameboard.placeShip(aircraftCarrier, 0, 0, 'horizontal', aircraftCarrier.length);
+    expect(gameboard.board[0][0]).toBe(aircraftCarrier);
+    expect(gameboard.board[0][5]).toBe(null);
+
+    const placeShipTest4 = gameboard.placeShip(aircraftCarrier, 0, 4, 'horizontal', aircraftCarrier.length);
+    expect(gameboard.board[0][5]).toBe(null);
+
  
   })
   test('receiveAttack() marks cells as hit and miss correctly', () => {
@@ -61,9 +69,6 @@ describe('Gameboard class.', () => {
     gameboard.receiveAttack(4, 3);
     gameboard.receiveAttack(5, 3);
     expect(gameboard.board[2][3].isSunk).toBe(true);
-
-
-
   })
 
 })
