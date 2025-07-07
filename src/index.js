@@ -22,7 +22,8 @@ const player1 = new Player();
 const computer = new Player();
 
 player1.gameboard.drawBoard();
-
-player1.placeShip(aircraftCarrier, 0, 0, 'vertical', aircraftCarrier.length);
-console.log(JSON.stringify(player1.gameboard.board));
-console.log('testingggggg');
+player1.setUpFleet();
+console.log(player1.gameboard.placedShips);
+// console.log(player1.gameboard);
+// player1.placeShip(aircraftCarrier, 0, 0, 'vertical', aircraftCarrier.length);
+// console.log(JSON.stringify(player1.gameboard.board));

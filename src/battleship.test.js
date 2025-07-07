@@ -111,7 +111,7 @@ describe('Gameboard class.', () => {
     const placeShipTest5 = gameboard.placeShip(aircraftCarrier, 0, 4, 'vertical', aircraftCarrier.length);
     const placeShipTest6 = gameboard.placeShip(aircraftCarrier, 0, 5, 'vertical', aircraftCarrier.length);
     expect(gameboard.placedShips.length).toBe(5);
-
-
+    
+    
   })
 })

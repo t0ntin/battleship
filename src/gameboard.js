@@ -23,14 +23,20 @@ export class Gameboard {
     // console.log(this.board);
   }
   
-  checkForShips(shipType,rowIndex, colIndex, direction, length) { //created this function third
-    for (let i = 0; i < length; i++) {
+  checkForShips(shipType,rowIndex, colIndex, direction) { //created this function third
+    for (let i = 0; i < shipType.length; i++) {
       if (direction === 'horizontal') {
+        if (colIndex + i >= 10) {
+          return true; // Out of bounds, treat as overlap to block placement
+        }
           if (this.board[rowIndex][colIndex + i] instanceof Ship) {
               console.log('Cannot place ship here: overlap detected.');
               return true; //I had 'return' only here initially. I thought return would be the same as return true, but it's not. checkForShips() inside of placeShip() needs to be true for it to stop.
           }
       } else if (direction === 'vertical') {
+        if (rowIndex + i >= 10) {
+          return true; // Out of bounds, treat as overlap to block placement
+        }
           if (this.board[rowIndex + i][colIndex] instanceof Ship) {
               console.log('Cannot place ship here: overlap detected.');
               return true; // exit placeShip early
@@ -40,26 +46,26 @@ export class Gameboard {
     return false; //no overlap detected.
   }
   
-  placeShip(shipType, rowIndex, colIndex, direction, length) { // Created this function second.
+  placeShip(shipType, rowIndex, colIndex, direction) { // Created this function second.
     const allFiveShipsPlaced = this.checkNumberOfShipsPlaced();
     if (allFiveShipsPlaced === false) {
-      return;
+      return false;
     }
-    if (this.checkForShips(shipType, rowIndex, colIndex, direction, length)) {
+    if (this.checkForShips(shipType, rowIndex, colIndex, direction, shipType.length)) {
       console.log('overlap found. Exiting');
-      return; // overlap found, exit early
+      return false; // overlap found, exit early
     }
-    if (direction === 'horizontal' && colIndex + length <= 10) {
+    if (direction === 'horizontal' && colIndex + shipType.length <= 10) {
       // If colindex is 8 and length is 4, it goes to position (0,8), then it adds the length of the ship, which is 4, and it evaluates to false, so it doesn't place the ship.
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < shipType.length; i++) {
         this.board[rowIndex][colIndex +i] = shipType;
       }
       this.placedShips.push(shipType);
       console.log(this.placedShips);
     }
-    if (direction === 'vertical' && rowIndex + length <=10) {
+    if (direction === 'vertical' && rowIndex + shipType.length <=10) {
       // if direction is vertical, rowindex is 3, and colindex is 0, it goes to the (fourth) row, then the first column (0), then adds the rowindex to the length of the ship (7). Then it types in ship in boxes (0,3) to (0,7 which is [6)])
-      for ( let i=0; i < length; i++) {
+      for ( let i=0; i < shipType.length; i++) {
 
         this.board[rowIndex +i][colIndex] = shipType;
       }
@@ -68,6 +74,7 @@ export class Gameboard {
 
     }
     // console.log(JSON.stringify(this.board));
+    return true;
   }
 
   receiveAttack(rowIndex, colIndex) {
