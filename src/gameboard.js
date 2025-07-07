@@ -87,7 +87,7 @@ export class Gameboard {
       // console.log(currentCell.numberOfHits);
       return 'hit';
     } else {
-      currentCell = 'miss';
+      this.board[rowIndex][colIndex] = 'miss';
       console.log(JSON.stringify(this.board));
       return 'miss';
     }

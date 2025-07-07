@@ -1,5 +1,6 @@
 import { Gameboard } from "./gameboard"
 import { Ship } from "./ship";
+import { Player } from "./Player";
 
 describe('Gameboard class.', () => {
 
@@ -114,4 +115,56 @@ describe('Gameboard class.', () => {
     
     
   })
-})
+  test('computerAttack() chooses cells to attack properly', () => {
+    const player1 = new Player();
+    player1.gameboard.drawBoard();
+
+    const aircraftCarrier = new Ship(5);
+    player1.gameboard.placeShip(aircraftCarrier, 0, 0, 'vertical', aircraftCarrier.length);
+
+    // ✅ Count hits and misses before attack
+    let hitOrMissCountBefore = 0;
+    player1.gameboard.board.forEach(row => {
+        row.forEach(cell => {
+            if (cell === 'hit' || cell === 'miss') {
+                hitOrMissCountBefore++;
+            }
+        });
+    });
+    expect(hitOrMissCountBefore).toBe(0);
+
+    // ✅ Computer attacks
+    const computer = new Player();
+    computer.computerAttack(player1);
+
+    // ✅ Count hits and misses after attack
+    let hitOrMissCountAfter = 0;
+    let hitFound = false;
+    let missFound = false;
+
+    player1.gameboard.board.forEach(row => {
+        row.forEach(cell => {
+            if (cell === 'hit' || cell === 'miss') {
+                hitOrMissCountAfter++;
+                if (cell === 'hit') hitFound = true;
+                if (cell === 'miss') missFound = true;
+            }
+        });
+    });
+
+    expect(hitOrMissCountAfter).toBe(1);
+    expect(hitFound || missFound).toBe(true); // confirm one of them happened
+});
+  test('computerAttack() calls receiveAttack() correctly', () => {
+    const player1 = new Player();
+    player1.gameboard.drawBoard()
+    const computer = new Player();
+    const receiveAttackMock = jest.fn();
+    player1.gameboard.receiveAttack = receiveAttackMock;
+
+    computer.computerAttack(player1);
+
+    expect(receiveAttackMock).toHaveBeenCalled();
+
+  })
+});

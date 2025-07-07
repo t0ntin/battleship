@@ -12,6 +12,11 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|scss)$": "<rootDir>/__mocks__/styleMock.js"
+    }
+  },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
