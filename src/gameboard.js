@@ -12,8 +12,6 @@ export class Gameboard {
 
     for (let i = 0; i < 10; i++) {
       const row = []; // this is one row
-      // console.log(row);
-      // page.grid1.append(row);
       for (let j = 0; j < 10; j++) {
         
         row.push(null); // fill each row with 10 cells (currently empty)
@@ -88,7 +86,8 @@ export class Gameboard {
       return 'hit';
     } else {
       this.board[rowIndex][colIndex] = 'miss';
-      console.log(JSON.stringify(this.board));
+      // console.log(JSON.stringify(this.board));
+      // console.log(this.board);
       return 'miss';
     }
   }
@@ -101,13 +100,34 @@ export class Gameboard {
       }
     })
     if (count === 5) {
-      return true;
-    } else return false;
+      return false;
+    } else return true;
   }
+
   checkNumberOfShipsPlaced() {
     if (this.placedShips.length >= 5) {
       return false;
     } else 
     return true;
   }
+  printBoard() {
+    let visual = '';
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+        const cell = this.board[row][col];
+        if (cell instanceof Ship) {
+          visual += 'S ';
+        } else if (cell === 'hit') {
+          visual += 'H ';
+        } else if (cell === 'miss') {
+          visual += 'M ';
+        } else {
+          visual += '. ';
+        }
+      }
+      visual += '\n';
+    }
+    console.log(visual);
+  }
+  
 }
