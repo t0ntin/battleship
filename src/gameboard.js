@@ -20,8 +20,10 @@ export class Gameboard {
     }
     // console.log(this.board);
   }
-  
+
+
   checkForShips(shipType,rowIndex, colIndex, direction) { //created this function third
+
     for (let i = 0; i < shipType.length; i++) {
       if (direction === 'horizontal') {
         if (colIndex + i >= 10) {

@@ -73,6 +73,7 @@ describe('Gameboard class.', () => {
     expect(aircraftCarrier.isSunk).toBe(true);
   })
 
+
   test('countSunkShips() counts ships are sunk',() => {
     const gameboard = new Gameboard();
 
@@ -168,6 +169,25 @@ describe('Gameboard class.', () => {
 
   })
 
- 
+  test('computerAttack calls receiveAttack on player\'s gameboard', () => {
+    const player1 = new Player();
+    const computer = new Player();
+    player1.gameboard.drawBoard();
+    computer.gameboard.drawBoard();
+    
+    // Fill player1's board with ships for a consistent test
+    const destroyer = new Ship(2);
+    player1.placeShip(destroyer, 0, 0, 'vertical', destroyer.length);
+
+    // Mock receiveAttack on player1's gameboard
+    const receiveAttackMock = jest.fn();
+    player1.gameboard.receiveAttack = receiveAttackMock;
+
+    // Call computerAttack
+    computer.computerAttack(player1);
+
+    // Assert that receiveAttack was called
+    expect(receiveAttackMock).toHaveBeenCalled();
+});
 
 });

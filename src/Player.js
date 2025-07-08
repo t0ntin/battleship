@@ -59,23 +59,6 @@ export class Player  {
     }
   }
 
-  // computerAttack(player) {
-  //   let attackSuccessful = false;
-
-  //   while (!attackSuccessful) {
-  //     const randomRow = Math.floor(Math.random() * 10);
-  //     const randomCol = Math.floor(Math.random() * 10);
-
-  //     const cellValue = player.gameboard.board[randomRow][randomCol];
-
-  //     if (cellValue !== 'hit' && cellValue !== 'miss') {
-  //         player.gameboard.receiveAttack(randomRow, randomCol);
-  //         attackSuccessful = true;
-  //     }
-  //   }
-  // }
-
-
 
 }
 
