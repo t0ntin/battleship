@@ -1,6 +1,10 @@
-import { Player } from "./Player";
-import { Ship } from "./ship";
-import { drawPlayer1BoardInDOM, drawComputerBoardInDOM, page } from "./cache-dom";
+import { Player } from './Player';
+import { Ship } from './ship';
+import {
+  drawPlayer1BoardInDOM,
+  drawComputerBoardInDOM,
+  page,
+} from './cache-dom';
 
 export const controlTurns = () => {
   const player1 = new Player();
@@ -20,7 +24,13 @@ export const controlTurns = () => {
   // player1.placeShip(new Ship(3), 0, 2, 'vertical', 3);
   // player1.placeShip(new Ship(3), 0, 3, 'vertical', 3);
   // player1.placeShip(new Ship(2), 0, 4, 'vertical', 2);
-  const shipTypes = [destroyer, submarine, cruiser, battleShip, aircraftCarrier];
+  const shipTypes = [
+    destroyer,
+    submarine,
+    cruiser,
+    battleShip,
+    aircraftCarrier,
+  ];
   shipTypes.forEach((shipType) => {
     let placed = false;
 
@@ -30,11 +40,16 @@ export const controlTurns = () => {
       const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
 
       // Attempt to place the ship
-      placed = player1.gameboard.placeShip(shipType, randomRow, randomCol, randomDir);
+      placed = player1.gameboard.placeShip(
+        shipType,
+        randomRow,
+        randomCol,
+        randomDir
+      );
       // console.log(`Attempting to place: ${shipType.length}`);
-    };
+    }
   });
-  // Place ships for computer 
+  // Place ships for computer
   computer.setUpFleet();
 
   drawPlayer1BoardInDOM(player1);
@@ -46,68 +61,101 @@ export const controlTurns = () => {
     const col = Number(box.dataset.col);
 
     if (computer.gameboard.board[row][col] === 'hit')
-    if (computer.gameboard.board[row][col] === 'hit' || computer.gameboard.board[row][col] === 'miss') {
+      if (
+        computer.gameboard.board[row][col] === 'hit' ||
+        computer.gameboard.board[row][col] === 'miss'
+      ) {
         console.log('Already attacked here.');
         return;
-    }
+      }
 
     const result = computer.gameboard.receiveAttack(row, col);
     if (result === 'hit') {
-        box.classList.add('hit');
-        console.log('You hit! Go again.');
+      box.classList.add('hit');
+      console.log('You hit! Go again.');
     } else {
-        box.classList.add('miss');
-        console.log('You missed! Computer\'s turn.');
+      box.classList.add('miss');
+      console.log("You missed! Computer's turn.");
 
-        // Check win condition after player turn
-        if (!computer.gameboard.countSunkShips()) {
-            console.log('You win!');
-            removeListeners();
-            return;
-        }
+      // Check win condition after player turn
+      if (!computer.gameboard.countSunkShips()) {
+        console.log('You win!');
+        removeListeners();
+        return;
+      }
 
-        // Computer's turn
-        setTimeout(() => {
-            computerTurn();
-        }, 500);
+      // Computer's turn
+      setTimeout(() => {
+        computerTurn();
+      }, 500);
     }
 
     // Check win condition after player hit
     if (!computer.gameboard.countSunkShips()) {
-        console.log('You win!');
+      console.log('You win!');
+      removeListeners();
+      return;
+    }
+  };
+
+  const computerTurn = () => {
+    let result;
+    do {
+      result = computer.computerAttack(player1);
+      drawPlayer1BoardInDOM(player1);
+
+      if (!player1.gameboard.countSunkShips()) {
+        console.log('Computer wins!');
         removeListeners();
         return;
-    }
-    };
+      }
 
-    const computerTurn = () => {
-        let result;
-        do {
-            result = computer.computerAttack(player1);
-            drawPlayer1BoardInDOM(player1);
+      if (result === 'hit') {
+        console.log('Computer hit! Computer goes again.');
+      } else {
+        console.log('Computer missed! Your turn.');
+      }
+    } while (result === 'hit');
+  };
 
-            if (!player1.gameboard.countSunkShips()) {
-                console.log('Computer wins!');
-                removeListeners();
-                return;
-            }
-
-            if (result === 'hit') {
-                console.log('Computer hit! Computer goes again.');
-            } else {
-                console.log('Computer missed! Your turn.');
-            }
-        } while (result === 'hit');
-    };
-
-    const removeListeners = () => {
-        boxes.forEach(box => {
-            box.removeEventListener('click', handlePlayerClick);
-        });
-    };
-
-    const boxes = document.querySelectorAll('.computer-board .box');
-    boxes.forEach(box => {
-        box.addEventListener('click', handlePlayerClick);
+  const removeListeners = () => {
+    computerCells.forEach((box) => {
+      box.removeEventListener('click', handlePlayerClick);
     });
+  };
+  const ships = document.querySelectorAll('.ship-section .ship');
+  ships.forEach(ship => {
+    ship.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', e.target.id);
+    })
+  });
+
+  // DRAG AND ROP FOR PLAYER1 SHIPS
+  const player1Cells = document.querySelectorAll('.player1-board .box');
+  player1Cells.forEach(cell => {
+    cell.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    cell.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const player1ShipID = e.dataTransfer.getData('text/plain');
+      console.log('dropped', player1ShipID, 'on cell:', cell.dataset.coordinates);
+    });
+  });
+  //END OF DRAG AND ROP FOR PLAYER1 SHIPS
+
+  const computerCells = document.querySelectorAll('.computer-board .box');
+  computerCells.forEach((cell) => {
+    cell.addEventListener('click', handlePlayerClick);
+  });
+  
+
+
+  
+  
+
+  const enableDragAndDrop = (e) => {
+  }
+  // console.log(enableDragAndDrop());
 };

@@ -21,19 +21,21 @@ export function makeElement(elementTag, className, appendToEl, textInside) {
   return element;
 }
 
-// export const drawPlayerBoard = (player1) => {
-//   player1.gameboard.board.forEach(row => {
-//     row.forEach(cell => {
-//       const element = makeElement('div', 'box');
-//       page.playerBoard.append(element)
-//     });
-//   });
-// };
 export const drawPlayer1BoardInDOM = (player1) => {
   page.playerBoard.innerHTML = ''; // clear before redrawing
-  player1.gameboard.board.forEach(row => {
-    row.forEach(cell => {
+  // row => Go to the (first) array.
+  // rowindex => get the index "of the array" (the first row, the second row, etc)
+  // cell => go to the (first) row.
+  // colindex => get the (first) item in that position. 
+  player1.gameboard.board.forEach((row, rowIndex) => {
+    console.log('row '+ row);
+    console.log('rowindex' + rowIndex);
+    row.forEach((cell, colIndex) => {
+      console.log('cell ' + cell);
+      console.log('colindex ' + colIndex);
       const element = makeElement('div', 'box');
+      element.dataset.coordinates = `${rowIndex},${colIndex}`;
+      // element.dataset.col = colIndex;
       if (cell instanceof Ship) {
         element.classList.add('ship'); // 🩶 show ships visually
       }
@@ -42,6 +44,19 @@ export const drawPlayer1BoardInDOM = (player1) => {
   });
 };
 
+// THIS IS A WORKING VERSION
+// export const drawPlayer1BoardInDOM = (player1) => {
+//   page.playerBoard.innerHTML = ''; // clear before redrawing
+//   player1.gameboard.board.forEach(row => {
+//     row.forEach(cell => {
+//       const element = makeElement('div', 'box');
+//       if (cell instanceof Ship) {
+//         element.classList.add('ship'); // 🩶 show ships visually
+//       }
+//       page.playerBoard.append(element);
+//     });
+//   });
+// };
 
 export const drawComputerBoardInDOM = (computer) => {
   page.computerBoard.innerHTML = ''; // clear before redrawing

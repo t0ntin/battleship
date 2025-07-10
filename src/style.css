@@ -44,27 +44,40 @@ body {
 }
 
 .ship {
-  border: 1px solid white;
+  /* border: 1px solid white; */
   background-color: blueviolet;
 }
 
 #aircraft-carrier {
-  width: 50px;
-  height: 10px;
+  width: 70px;
+  height: 14px;
 }
+
 #battleship {
-  width: 40px;
-  height: 10px;
+  width: 50px;
+  height: 14px;
 }
+
 #cruiser {
-  width: 30px;
-  height: 10px;
+  width: 40px;
+  height: 14px;
 }
+
 #submarine {
-  width: 30px;
-  height: 10px;
+  width: 40px;
+  height: 14px;
 }
+
 #destroyer {
-  width: 20px;
-  height: 10px;
+  width: 30px;
+  height: 14px;
 }
+
+.hit {
+  background-color: lightsalmon;
+}
+
+.miss {
+  background-color: gray;
+}
+
