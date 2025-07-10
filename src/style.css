@@ -4,15 +4,23 @@
 }
 
 body {
-  background-color: black;
+  background-color: rgb(36, 36, 36);
 }
 
-.grid1 {
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
+  gap: 15px;
+}
+
+.player1-board, .computer-board{
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   grid-template-columns: repeat(10, 1fr);
-  width: 300px;  
-  height: 300px;
+  width: 200px;  
+  height: 200px;
 }
 
 .box {
@@ -21,5 +29,42 @@ body {
   height: 15px; */
   width: 100%;
   height: 100%;
-  background-color: rgb(3, 182, 182);
+  background-color: rgb(34, 73, 73);
+}
+
+.ship-section {
+  width: 200px;
+  height: 200px;
+  border: 1px solid white;
+  background-color: rgb(12, 12, 143);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ship {
+  border: 1px solid white;
+  background-color: blueviolet;
+}
+
+#aircraft-carrier {
+  width: 50px;
+  height: 10px;
+}
+#battleship {
+  width: 40px;
+  height: 10px;
+}
+#cruiser {
+  width: 30px;
+  height: 10px;
+}
+#submarine {
+  width: 30px;
+  height: 10px;
+}
+#destroyer {
+  width: 20px;
+  height: 10px;
 }

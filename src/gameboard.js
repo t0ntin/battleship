@@ -61,7 +61,7 @@ export class Gameboard {
         this.board[rowIndex][colIndex +i] = shipType;
       }
       this.placedShips.push(shipType);
-      console.log(this.placedShips);
+      // console.log(this.placedShips);
     }
     if (direction === 'vertical' && rowIndex + shipType.length <=10) {
       // if direction is vertical, rowindex is 3, and colindex is 0, it goes to the (fourth) row, then the first column (0), then adds the rowindex to the length of the ship (7). Then it types in ship in boxes (0,3) to (0,7 which is [6)])
@@ -79,18 +79,22 @@ export class Gameboard {
 
   receiveAttack(rowIndex, colIndex) {
     let currentCell = this.board[rowIndex][colIndex];
+
+    // Check if the cell has already been hit
+    if (currentCell === 'hit' || currentCell === 'miss') {
+        console.log('Cell has already been attacked.');
+        return 'already-attacked';  // or handle appropriately
+    }
+    
+    // Check if it is a Ship
     if (currentCell instanceof Ship) {
-      currentCell.increaseNumberOfHits();
-      currentCell.determineIfSunk();
-      this.countSunkShips();
-      // console.log(JSON.stringify(this.board));
-      // console.log(currentCell.numberOfHits);
-      return 'hit';
+        currentCell.increaseNumberOfHits();
+        currentCell.determineIfSunk();
+        this.board[rowIndex][colIndex] = 'hit'; // Mark as hit
+        return 'hit';
     } else {
-      this.board[rowIndex][colIndex] = 'miss';
-      // console.log(JSON.stringify(this.board));
-      // console.log(this.board);
-      return 'miss';
+        this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
+        return 'miss';
     }
   }
 
@@ -99,6 +103,7 @@ export class Gameboard {
     this.placedShips.forEach((ship) => {
       if (ship.isSunk === true) {
         count++
+        // console.log(count);
       }
     })
     if (count === 5) {
@@ -129,7 +134,7 @@ export class Gameboard {
       }
       visual += '\n';
     }
-    console.log(visual);
+    // console.log(visual);
   }
   
 }

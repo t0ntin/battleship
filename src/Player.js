@@ -16,33 +16,34 @@ export class Player  {
     const cruiser = new Ship(3);
     const submarine = new Ship(3);
     const destroyer = new Ship(2);
-    const shipTypes = [destroyer, submarine, cruiser, battleShip, aircraftCarrier];
-
+    // const shipTypes = [destroyer, submarine, cruiser, battleShip, aircraftCarrier];
+    
     const destroyer1 = new Ship(2);
     const destroyer2 = new Ship(2);
     const destroyer3 = new Ship(2);
     const destroyer4 = new Ship(2);
     const destroyer5 = new Ship(2);
-
-    this.placeShip(destroyer1, 0, 0, 'vertical', destroyer.length);
-    this.placeShip(destroyer2, 2, 0, 'vertical', destroyer.length);
-    this.placeShip(destroyer3, 4, 0, 'vertical', destroyer.length);
-    this.placeShip(destroyer4, 6, 0, 'vertical', destroyer.length);
-    this.placeShip(destroyer5, 8, 0, 'vertical', destroyer.length);
+    
+    const shipTypes = [destroyer1, destroyer2, destroyer3, destroyer4, destroyer5];
+    // this.placeShip(destroyer1, 0, 0, 'vertical', destroyer.length);
+    // this.placeShip(destroyer2, 2, 0, 'vertical', destroyer.length);
+    // this.placeShip(destroyer3, 4, 0, 'vertical', destroyer.length);
+    // this.placeShip(destroyer4, 6, 0, 'vertical', destroyer.length);
+    // this.placeShip(destroyer5, 8, 0, 'vertical', destroyer.length);
     shipTypes.forEach((shipType) => {
       let placed = false;
 
-      // while (!placed) {
-      //   const randomRow = Math.floor(Math.random() * 10);
-      //   const randomCol = Math.floor(Math.random() * 10);
-      //   const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+      while (!placed) {
+        const randomRow = Math.floor(Math.random() * 10);
+        const randomCol = Math.floor(Math.random() * 10);
+        const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
 
-      //   // Attempt to place the ship
-      //   placed = this.gameboard.placeShip(shipType, randomRow, randomCol, randomDir);
-      //   console.log(`Attempting to place: ${shipType.length}`);
+        // Attempt to place the ship
+        placed = this.gameboard.placeShip(shipType, randomRow, randomCol, randomDir);
+        // console.log(`Attempting to place: ${shipType.length}`);
 
-      //   // If placement fails, loop repeats automatically to retry
-      // };
+        // If placement fails, loop repeats automatically to retry
+      };
     });
   }
   computerAttack(player) {
