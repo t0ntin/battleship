@@ -21,13 +21,13 @@ export const controlTurns = () => {
   const destroyer = new Ship(2);
 
   const shipTypes = {
-    'carrier': carrier,
-    'battleship': battleShip,
-    'cruiser': cruiser,
-    'submarine': submarine,
-    'destroyer': destroyer
+    carrier: carrier,
+    battleship: battleShip,
+    cruiser: cruiser,
+    submarine: submarine,
+    destroyer: destroyer,
   };
-  
+
   // player1.placeShip(new Ship(5), 0, 0, 'vertical', 5);
   // player1.placeShip(new Ship(4), 0, 1, 'vertical', 4);
   // player1.placeShip(new Ship(3), 0, 2, 'vertical', 3);
@@ -132,55 +132,90 @@ export const controlTurns = () => {
       box.removeEventListener('click', handlePlayerClick);
     });
   };
+
+  // const ships = document.querySelectorAll('.ship-section .ship');
+
+  // ships.forEach(shipEl => {
+  //   shipEl.addEventListener('dragstart', (e) => {
+  //     e.dataTransfer.setData('text/plain', e.target.id);
+
+  //     // Remove visual highlight from current cells
+  //     const ship = shipTypes[e.target.id]; // get Ship object by id
+  //     const currentCoordinates = player1.gameboard.getShipCoordinates(ship);
+  //     console.log(currentCoordinates);
+
+  //     currentCoordinates.forEach(([row, col]) => {
+  //       const box = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+  //       console.log(`Removing at [${row},${col}]`, box);
+
+  //       box.classList.remove('ship');
+  //     });
+
+  //     // Clear the ship from the gameboard state
+  //     player1.gameboard.removeShip(ship);
+  //   });
+  // });
+
   const ships = document.querySelectorAll('.ship-section .ship');
-  ships.forEach(ship => {
-    ship.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', e.target.id);
-    })
+  const handleDragstart = (e) => {
+    e.dataTransfer.setData('text/plain', e.target.id);
+  }
+  ships.forEach((ship) => {
+    ship.addEventListener('dragstart', handleDragstart);
   });
 
   // DRAG AND ROP FOR PLAYER1 SHIPS
   const player1Cells = document.querySelectorAll('.player1-board .box');
-  player1Cells.forEach(cell => {
+  player1Cells.forEach((cell) => {
     cell.addEventListener('dragover', (e) => {
       e.preventDefault();
     });
 
     cell.addEventListener('drop', (e) => {
       e.preventDefault();
-      const player1ShipID = e.dataTransfer.getData('text/plain'); 
-      console.log('dropped', player1ShipID, 'on cell:', cell.dataset.coordinates);
+      const player1ShipID = e.dataTransfer.getData('text/plain');
+      console.log(player1ShipID);
+      console.log(
+        'dropped',
+        player1ShipID,
+        'on cell:',
+        cell.dataset.coordinates
+      );
       const shipEl = document.getElementById(player1ShipID);
       const ship = shipTypes[player1ShipID];
+      console.log(ship);
       const length = ship.length;
       const direction = 'horizontal';
       const rowIndex = Number(cell.dataset.coordinates[0]);
       const colIndex = Number(cell.dataset.coordinates[2]);
-      if (player1.gameboard.placeShip(ship, rowIndex, colIndex, 'horizontal', ship.length)) {
+      if (
+        player1.gameboard.placeShip(
+          ship,
+          rowIndex,
+          colIndex,
+          'horizontal',
+          ship.length
+        )
+      ) {
         cell.append(shipEl);
+        shipEl.removeAttribute('draggable');
+        shipEl.removeEventListener('dragstart', handleDragstart);
       }
-      
-      const shipCoordinates = []
-      player1.gameboard.board.forEach((row, rowIndex) => {
-        row.forEach((col, colIndex) => {
-          if (col instanceof Ship) {
-            shipCoordinates.push([rowIndex,colIndex]);
-          }
-        });
-      });
+      const shipCoordinates = player1.gameboard.getShipCoordinates(ship);
+      console.log(shipCoordinates);
+
       shipCoordinates.forEach((item) => {
         let row = item[0];
         let col = item[1];
-        let shipCells = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-        shipCells.classList.add('ship');
-
+        let shipElements = document.querySelector(
+          `[data-row="${row}"][data-col="${col}"]`
+        );
+        shipElements.classList.add('ship');
       });
 
       console.log(JSON.stringify(shipCoordinates));
-      
+
       console.log(player1.gameboard.board);
-
-
     });
   });
   //END OF DRAG AND ROP FOR PLAYER1 SHIPS
@@ -189,13 +224,7 @@ export const controlTurns = () => {
   computerCells.forEach((cell) => {
     cell.addEventListener('click', handlePlayerClick);
   });
-  
 
-
-  
-  
-
-  const enableDragAndDrop = (e) => {
-  }
+  const enableDragAndDrop = (e) => {};
   // console.log(enableDragAndDrop());
 };

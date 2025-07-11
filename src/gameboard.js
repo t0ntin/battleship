@@ -21,7 +21,6 @@ export class Gameboard {
     // console.log(this.board);
   }
 
-
   checkForShips(shipType,rowIndex, colIndex, direction) { //created this function third
 
     for (let i = 0; i < shipType.length; i++) {
@@ -117,6 +116,29 @@ export class Gameboard {
     } else 
     return true;
   }
+
+  getShipCoordinates(ship) {
+    const coordinates = []
+    this.board.forEach((row, rowIndex) => {
+      row.forEach((col, colIndex) => {
+        if (col === ship) {
+          coordinates.push([rowIndex, colIndex])
+        }
+      })
+    })
+    return coordinates;
+  }
+
+  // removeShip(ship) {
+  //   this.board.forEach((row, rowindex) => {
+  //     row.forEach((col, colIndex) => {
+  //       if (col === ship) {
+  //         col = null;
+  //       }
+  //     })
+  //   })
+  // }
+
   printBoard() {
     let visual = '';
     for (let row = 0; row < 10; row++) {

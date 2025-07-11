@@ -1,6 +1,5 @@
 import { Gameboard } from "./gameboard";
 import { Ship } from "./ship";
-import { player1 } from ".";
 
 export class Player  {
   constructor () {
