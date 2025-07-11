@@ -28,14 +28,11 @@ export const drawPlayer1BoardInDOM = (player1) => {
   // cell => go to the (first) row.
   // colindex => get the (first) item in that position. 
   player1.gameboard.board.forEach((row, rowIndex) => {
-    console.log('row '+ row);
-    console.log('rowindex' + rowIndex);
     row.forEach((cell, colIndex) => {
-      console.log('cell ' + cell);
-      console.log('colindex ' + colIndex);
       const element = makeElement('div', 'box');
       element.dataset.coordinates = `${rowIndex},${colIndex}`;
-      // element.dataset.col = colIndex;
+      element.dataset.row = rowIndex;
+      element.dataset.col = colIndex;
       if (cell instanceof Ship) {
         element.classList.add('ship'); // 🩶 show ships visually
       }
