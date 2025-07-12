@@ -28,16 +28,16 @@ export const controlTurns = () => {
   player1.gameboard.drawBoard();
   computer.gameboard.drawBoard();
 
-  // Place player1 ships randomly (currently; will change when you implement manual placement)
-  shipTypes.forEach((shipType) => {
-    let placed = false;
-    while (!placed) {
-      const randomRow = Math.floor(Math.random() * 10);
-      const randomCol = Math.floor(Math.random() * 10);
-      const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
-      placed = player1.gameboard.placeShip(shipType, randomRow, randomCol, randomDir);
-    }
-  });
+  // RANDOM PLACEMENT OF SHIPS FOR PLAYER1
+  // shipTypes.forEach((shipType) => {
+  //   let placed = false;
+  //   while (!placed) {
+  //     const randomRow = Math.floor(Math.random() * 10);
+  //     const randomCol = Math.floor(Math.random() * 10);
+  //     const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+  //     placed = player1.gameboard.placeShip(shipType, randomRow, randomCol, randomDir);
+  //   }
+  // });
 
   // Place computer ships randomly
   computer.setUpFleet();
@@ -134,37 +134,6 @@ export const controlTurns = () => {
   }
 
   function addHoverPlacementListeners(ship, orientation) {
-    page.player1BoardEls.forEach(cell => {
-      cell.addEventListener('mouseenter', () => {
-        const row = Number(cell.dataset.row);
-        const col = Number(cell.dataset.col);
-  
-        const cellsToHighlight = [];
-  
-        for (let i = 0; i < ship.length; i++) {
-          let currentRow = row;
-          let currentCol = col;
-  
-          if (orientation === 'horizontal') {
-            currentCol += i;
-          } else {
-            currentRow += i;
-          }
-  
-          const targetCell = document.querySelector(`[data-row="${currentRow}"][data-col="${currentCol}"]`);
-          if (targetCell) {
-            cellsToHighlight.push(targetCell);
-          }
-        }
-  
-        cellsToHighlight.forEach(c => c.classList.add('hover-preview'));
-      });
-  
-      cell.addEventListener('mouseleave', () => {
-        document.querySelectorAll('.hover-preview').forEach(c => c.classList.remove('hover-preview'));
-      });
-    });
-
     function handleMouseEnter(e) {
       const row = Number(e.target.dataset.row);
       const col = Number(e.target.dataset.col);
@@ -172,34 +141,70 @@ export const controlTurns = () => {
         ship.length,
         row,
         col,
-        currentOrientation
+        orientation
       );
-      // console.log(hoverCoords);
-    
       if (!hoverCoords) return; // out of bounds
-    
-      // Check if placement is valid
-      const isValid = hoverCoords.every(([r, c]) => {
-        return player1.gameboard.board[r][c] === null;
-      });
-    
+  
+      const isValid = hoverCoords.every(([r, c]) => player1.gameboard.board[r][c] === null);
+  
       hoverCoords.forEach(([r, c]) => {
         const cell = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
-        cell.classList.add(isValid ? 'valid-hover' : 'invalid-hover');
+        if (cell) {
+          cell.classList.add(isValid ? 'valid-hover' : 'invalid-hover');
+        }
       });
     }
-    
-    function handleMouseLeave(e) {
+  
+    function handleMouseLeave() {
       document.querySelectorAll('.valid-hover, .invalid-hover').forEach(cell => {
         cell.classList.remove('valid-hover', 'invalid-hover');
       });
     }
+  
+    function handlePlacementClick(e) {
+      const row = Number(e.target.dataset.row);
+      const col = Number(e.target.dataset.col);
+      const hoverCoords = player1.gameboard.getPotentialShipCoordinates(
+        ship.length,
+        row,
+        col,
+        orientation
+      );
+      if (!hoverCoords) return;
+  
+      const isValid = hoverCoords.every(([r, c]) => player1.gameboard.board[r][c] === null);
+      if (!isValid) {
+        console.log('Invalid placement.');
+        return;
+      }
+  
+      // Place ship in logical board
+      player1.gameboard.placeShip(ship, row, col, orientation, ship.length);
+  
+      // Update DOM
+      drawPlayer1BoardInDOM(player1);
+  
+      // Remove hover and click listeners to prevent duplicate placement
+      page.player1BoardEls.forEach(cell => {
+        cell.removeEventListener('mouseenter', handleMouseEnter);
+        cell.removeEventListener('mouseleave', handleMouseLeave);
+        cell.removeEventListener('click', handlePlacementClick);
+      });
+  
+      console.log(`${ship.name} placed. Game starts now.`);
+      addComputerBoardListeners(); // Start gameplay
+    }
+  
     page.player1BoardEls.forEach(cell => {
       cell.addEventListener('mouseenter', handleMouseEnter);
       cell.addEventListener('mouseleave', handleMouseLeave);
+      cell.addEventListener('click', handlePlacementClick);
     });
-    
   }
+  
+
+
+
 
 };
 
@@ -209,9 +214,7 @@ const randomizePlayer1Board = () =>{
 }
 page.randomizeEl.addEventListener('click', randomizePlayer1Board)
 
-// ******************************
-// getShipCoordinates is returning undefined. Find out why.
-// **********************8**********
+
 
 
 // const getShipInfo = () => {
