@@ -1,82 +1,72 @@
 import { Player } from './Player';
 import { Ship } from './ship';
 import {
-  drawPlayer1BoardInDOM,
-  drawComputerBoardInDOM,
-  page,
-} from './cache-dom';
+  drawPlayer1BoardInDOM, drawComputerBoardInDOM,page} from './cache-dom';
 
+  const availableShips = () => {
+  const carrier = new Ship(5, 'carrier');
+  const battleShip = new Ship(4, 'battleship');
+  const cruiser = new Ship(3, 'cruiser');
+  const submarine = new Ship(3, 'submarine');
+  const destroyer = new Ship(2, 'destroyer');
+  return [carrier, battleShip, cruiser, submarine, destroyer];
+}
+// SHIPTYPES IS AN ARRAY OF SHPS
+const shipTypes = availableShips();
+let currentOrientation = 'vertical';
+let shipSelectedByUser = 'battleship';
 export const controlTurns = () => {
   const player1 = new Player();
   const computer = new Player();
 
+  // Draw logical boards
   player1.gameboard.drawBoard();
   computer.gameboard.drawBoard();
 
-  // Place ships for player1
-  const carrier = new Ship(5);
-  const battleShip = new Ship(4);
-  const cruiser = new Ship(3);
-  const submarine = new Ship(3);
-  const destroyer = new Ship(2);
+  // Place player1 ships randomly (currently; will change when you implement manual placement)
+  shipTypes.forEach((shipType) => {
+    let placed = false;
+    while (!placed) {
+      const randomRow = Math.floor(Math.random() * 10);
+      const randomCol = Math.floor(Math.random() * 10);
+      const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+      placed = player1.gameboard.placeShip(shipType, randomRow, randomCol, randomDir);
+    }
+  });
 
-  const shipTypes = {
-    carrier: carrier,
-    battleship: battleShip,
-    cruiser: cruiser,
-    submarine: submarine,
-    destroyer: destroyer,
-  };
-
-  // player1.placeShip(new Ship(5), 0, 0, 'vertical', 5);
-  // player1.placeShip(new Ship(4), 0, 1, 'vertical', 4);
-  // player1.placeShip(new Ship(3), 0, 2, 'vertical', 3);
-  // player1.placeShip(new Ship(3), 0, 3, 'vertical', 3);
-  // player1.placeShip(new Ship(2), 0, 4, 'vertical', 2);
-  // const shipTypes = [
-  //   carrier,
-  //   battleShip,
-  //   cruiser,
-  //   submarine,
-  //   destroyer,
-  // ];
-  // shipTypes.forEach((shipType) => {
-  //   let placed = false;
-
-  //   while (!placed) {
-  //     const randomRow = Math.floor(Math.random() * 10);
-  //     const randomCol = Math.floor(Math.random() * 10);
-  //     const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
-
-  //     // Attempt to place the ship
-  //     placed = player1.gameboard.placeShip(
-  //       shipType,
-  //       randomRow,
-  //       randomCol,
-  //       randomDir
-  //     );
-  //     // console.log(`Attempting to place: ${shipType.length}`);
-  //   }
-  // });
-  // Place ships for computer
+  // Place computer ships randomly
   computer.setUpFleet();
 
+  // Draw boards visually
   drawPlayer1BoardInDOM(player1);
   drawComputerBoardInDOM(computer);
 
-  const handlePlayerClick = (e) => {
+  // Had to add this here because they evaluate as undefined.
+  page.computerBoardEls = document.querySelectorAll('.computer-board .box');
+  page.player1BoardEls = document.querySelectorAll('.player1-board .box');
+
+  // Attach event listeners
+  addComputerBoardListeners();
+
+  const foundShipName = shipTypes.find(ship => ship.name === shipSelectedByUser);
+  console.log(foundShipName);
+  addHoverPlacementListeners(foundShipName, currentOrientation);
+
+  // ---- Local Functions ---- //
+
+  function handlePlayerClick(e) {
     const box = e.target;
     const row = Number(box.dataset.row);
     const col = Number(box.dataset.col);
 
-    if (computer.gameboard.board[row][col] === 'hit')
-      if (
-        computer.gameboard.board[row][col] === 'hit' ||
-        computer.gameboard.board[row][col] === 'miss'
-      ) {
-        console.log('Already attacked here.');
-        return;
-      }
+    // Prevent attacking same spot twice
+    if (
+      computer.gameboard.board[row][col] === 'hit' ||
+      computer.gameboard.board[row][col] === 'miss'
+    ) {
+      console.log('Already attacked here.');
+      return;
+    }
 
     const result = computer.gameboard.receiveAttack(row, col);
     if (result === 'hit') {
@@ -89,7 +79,7 @@ export const controlTurns = () => {
       // Check win condition after player turn
       if (!computer.gameboard.countSunkShips()) {
         console.log('You win!');
-        removeListeners();
+        removeComputerBoardListeners();
         return;
       }
 
@@ -102,12 +92,12 @@ export const controlTurns = () => {
     // Check win condition after player hit
     if (!computer.gameboard.countSunkShips()) {
       console.log('You win!');
-      removeListeners();
+      removeComputerBoardListeners();
       return;
     }
-  };
+  }
 
-  const computerTurn = () => {
+  function computerTurn() {
     let result;
     do {
       result = computer.computerAttack(player1);
@@ -115,7 +105,7 @@ export const controlTurns = () => {
 
       if (!player1.gameboard.countSunkShips()) {
         console.log('Computer wins!');
-        removeListeners();
+        removeComputerBoardListeners();
         return;
       }
 
@@ -125,106 +115,280 @@ export const controlTurns = () => {
         console.log('Computer missed! Your turn.');
       }
     } while (result === 'hit');
-  };
-
-  const removeListeners = () => {
-    computerCells.forEach((box) => {
-      box.removeEventListener('click', handlePlayerClick);
-    });
-  };
-
-  // const ships = document.querySelectorAll('.ship-section .ship');
-
-  // ships.forEach(shipEl => {
-  //   shipEl.addEventListener('dragstart', (e) => {
-  //     e.dataTransfer.setData('text/plain', e.target.id);
-
-  //     // Remove visual highlight from current cells
-  //     const ship = shipTypes[e.target.id]; // get Ship object by id
-  //     const currentCoordinates = player1.gameboard.getShipCoordinates(ship);
-  //     console.log(currentCoordinates);
-
-  //     currentCoordinates.forEach(([row, col]) => {
-  //       const box = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-  //       console.log(`Removing at [${row},${col}]`, box);
-
-  //       box.classList.remove('ship');
-  //     });
-
-  //     // Clear the ship from the gameboard state
-  //     player1.gameboard.removeShip(ship);
-  //   });
-  // });
-
-  const ships = document.querySelectorAll('.ship-section .ship');
-  const handleDragstart = (e) => {
-    e.dataTransfer.setData('text/plain', e.target.id);
   }
-  ships.forEach((ship) => {
-    ship.addEventListener('dragstart', handleDragstart);
-  });
 
-  // DRAG AND ROP FOR PLAYER1 SHIPS
-  const player1Cells = document.querySelectorAll('.player1-board .box');
-  player1Cells.forEach((cell) => {
-    cell.addEventListener('dragover', (e) => {
-      e.preventDefault();
+  function addComputerBoardListeners() {
+    page.computerBoardEls.forEach((cell) => {
+      cell.addEventListener('click', handlePlayerClick);
     });
+  }
 
-    cell.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const player1ShipID = e.dataTransfer.getData('text/plain');
-      console.log(player1ShipID);
-      console.log(
-        'dropped',
-        player1ShipID,
-        'on cell:',
-        cell.dataset.coordinates
-      );
-      const shipEl = document.getElementById(player1ShipID);
-      const ship = shipTypes[player1ShipID];
-      console.log(ship);
-      const length = ship.length;
-      const direction = 'horizontal';
-      const rowIndex = Number(cell.dataset.coordinates[0]);
-      const colIndex = Number(cell.dataset.coordinates[2]);
-      if (
-        player1.gameboard.placeShip(
-          ship,
-          rowIndex,
-          colIndex,
-          'horizontal',
-          ship.length
-        )
-      ) {
-        cell.append(shipEl);
-        shipEl.removeAttribute('draggable');
-        shipEl.removeEventListener('dragstart', handleDragstart);
-      }
-      const shipCoordinates = player1.gameboard.getShipCoordinates(ship);
-      console.log(shipCoordinates);
+  function removeComputerBoardListeners() {
+    page.computerBoardEls.forEach((cell) => {
+      cell.removeEventListener('click', handlePlayerClick);
+    });
+  }
 
-      shipCoordinates.forEach((item) => {
-        let row = item[0];
-        let col = item[1];
-        let shipElements = document.querySelector(
-          `[data-row="${row}"][data-col="${col}"]`
-        );
-        shipElements.classList.add('ship');
+  function addHoverPlacementListeners(ship, orientation) {
+    page.player1BoardEls.forEach(cell => {
+      cell.addEventListener('mouseenter', () => {
+        const row = Number(cell.dataset.row);
+        const col = Number(cell.dataset.col);
+  
+        const cellsToHighlight = [];
+  
+        for (let i = 0; i < ship.length; i++) {
+          let currentRow = row;
+          let currentCol = col;
+  
+          if (orientation === 'horizontal') {
+            currentCol += i;
+          } else {
+            currentRow += i;
+          }
+  
+          const targetCell = document.querySelector(`[data-row="${currentRow}"][data-col="${currentCol}"]`);
+          if (targetCell) {
+            cellsToHighlight.push(targetCell);
+          }
+        }
+  
+        cellsToHighlight.forEach(c => c.classList.add('hover-preview'));
       });
-
-      console.log(JSON.stringify(shipCoordinates));
-
-      console.log(player1.gameboard.board);
+  
+      cell.addEventListener('mouseleave', () => {
+        document.querySelectorAll('.hover-preview').forEach(c => c.classList.remove('hover-preview'));
+      });
     });
-  });
-  //END OF DRAG AND ROP FOR PLAYER1 SHIPS
-
-  const computerCells = document.querySelectorAll('.computer-board .box');
-  computerCells.forEach((cell) => {
-    cell.addEventListener('click', handlePlayerClick);
-  });
-
-  const enableDragAndDrop = (e) => {};
-  // console.log(enableDragAndDrop());
+  }
+  
+  
 };
+
+// BUTTON TO RANDOMIZE THE BOARD
+const randomizePlayer1Board = () =>{
+  controlTurns();
+}
+page.randomizeEl.addEventListener('click', randomizePlayer1Board)
+
+// const getShipInfo = () => {
+//   const ships = {};
+//   shipTypes.forEach(shipType => {
+//     ships[shipType.name] = {
+//       name: shipType.name,
+//       length: shipType.length,
+//       orientation: currentOrientation
+//     }
+  
+//   })
+// return ships;
+// }
+// const shipDataToHover = getShipInfo();
+// console.log(shipDataToHover);
+
+
+
+// export const controlTurns = () => {
+//   const player1 = new Player();
+//   const computer = new Player();
+
+//   player1.gameboard.drawBoard();
+//   computer.gameboard.drawBoard();
+
+//   // Place ships for player1
+//   // const carrier = new Ship(5, 'carrier');
+//   // const battleShip = new Ship(4, 'battleship');
+//   // const cruiser = new Ship(3, 'cruiser');
+//   // const submarine = new Ship(3, 'submarine');
+//   // const destroyer = new Ship(2, 'destroyer');
+
+//   // const shipTypes = {
+//   //   carrier: carrier,
+//   //   battleship: battleShip,
+//   //   cruiser: cruiser,
+//   //   submarine: submarine,
+//   //   destroyer: destroyer,
+//   // };
+
+//   // player1.placeShip(new Ship(5), 0, 0, 'vertical', 5);
+//   // player1.placeShip(new Ship(4), 0, 1, 'vertical', 4);
+//   // player1.placeShip(new Ship(3), 0, 2, 'vertical', 3);
+//   // player1.placeShip(new Ship(3), 0, 3, 'vertical', 3);
+//   // player1.placeShip(new Ship(2), 0, 4, 'vertical', 2);
+//   // const shipTypes = [
+//   //   carrier,
+//   //   battleShip,
+//   //   cruiser,
+//   //   submarine,
+//   //   destroyer,
+//   // ];
+//   shipTypes.forEach((shipType) => {
+//     let placed = false;
+
+//     while (!placed) {
+//       const randomRow = Math.floor(Math.random() * 10);
+//       const randomCol = Math.floor(Math.random() * 10);
+//       const randomDir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+
+//       // Attempt to place the ship
+//       placed = player1.gameboard.placeShip(
+//         shipType,
+//         randomRow,
+//         randomCol,
+//         randomDir
+//       );
+//       // console.log(`Attempting to place: ${shipType.length}`);
+//     }
+//   });
+//   // Place ships for computer
+//   computer.setUpFleet();
+
+//   drawPlayer1BoardInDOM(player1);
+//   drawComputerBoardInDOM(computer);
+//   page.computerBoardEls = document.querySelectorAll('.computer-board .box');
+//   console.log(page.computerBoardEls);
+//   const handlePlayerClick = (e) => {
+//     const box = e.target;
+//     const row = Number(box.dataset.row);
+//     const col = Number(box.dataset.col);
+
+//     if (computer.gameboard.board[row][col] === 'hit')
+//       if (
+//         computer.gameboard.board[row][col] === 'hit' ||
+//         computer.gameboard.board[row][col] === 'miss'
+//       ) {
+//         console.log('Already attacked here.');
+//         return;
+//       }
+
+//     const result = computer.gameboard.receiveAttack(row, col);
+//     if (result === 'hit') {
+//       box.classList.add('hit');
+//       console.log('You hit! Go again.');
+//     } else {
+//       box.classList.add('miss');
+//       console.log("You missed! Computer's turn.");
+
+//       // Check win condition after player turn
+//       if (!computer.gameboard.countSunkShips()) {
+//         console.log('You win!');
+//         removeListeners();
+//         return;
+//       }
+
+//       // Computer's turn
+//       setTimeout(() => {
+//         computerTurn();
+//       }, 500);
+//     }
+
+//     // Check win condition after player hit
+//     if (!computer.gameboard.countSunkShips()) {
+//       console.log('You win!');
+//       removeListeners();
+//       return;
+//     }
+//   };
+
+//   const computerTurn = () => {
+//     let result;
+//     do {
+//       result = computer.computerAttack(player1);
+//       drawPlayer1BoardInDOM(player1);
+
+//       if (!player1.gameboard.countSunkShips()) {
+//         console.log('Computer wins!');
+//         removeListeners();
+//         return;
+//       }
+
+//       if (result === 'hit') {
+//         console.log('Computer hit! Computer goes again.');
+//       } else {
+//         console.log('Computer missed! Your turn.');
+//       }
+//     } while (result === 'hit');
+//   };
+
+//   const removeListeners = () => {
+//     computerCells.forEach((box) => {
+//       box.removeEventListener('click', handlePlayerClick);
+//     });
+//   };
+
+
+//   // const ships = document.querySelectorAll('.ship-section .ship');
+//   // const handleDragstart = (e) => {
+//   //   e.dataTransfer.setData('text/plain', e.target.id);
+//   // }
+//   // ships.forEach((ship) => {
+//   //   ship.addEventListener('dragstart', handleDragstart);
+//   // });
+
+//   // // DRAG AND ROP FOR PLAYER1 SHIPS
+  
+//   // const player1Cells = document.querySelectorAll('.player1-board .box');
+//   // player1Cells.forEach((cell) => {
+//   //   cell.addEventListener('dragover', (e) => {
+//   //     e.preventDefault();
+//   //   });
+
+//   //   cell.addEventListener('drop', (e) => {
+//   //     e.preventDefault();
+//   //     const player1ShipID = e.dataTransfer.getData('text/plain');
+//   //     console.log(player1ShipID);
+//   //     console.log('dropped',player1ShipID,'on cell:',cell.dataset.coordinates );
+//   //     const shipEl = document.getElementById(player1ShipID);
+//   //     const ship = shipTypes[player1ShipID];
+//   //     console.log(ship);
+//   //     const length = ship.length;
+//   //     let direction = 'vertical';
+//   //     console.log('direction', direction);
+//   //     const rowIndex = Number(cell.dataset.coordinates[0]);
+//   //     const colIndex = Number(cell.dataset.coordinates[2]);
+//   //     if (
+//   //       player1.gameboard.placeShip(
+//   //         ship,
+//   //         rowIndex,
+//   //         colIndex,
+//   //         direction,
+//   //         ship.length
+//   //       )
+//   //     ) {
+//   //           // cell.append(shipEl); // instead of appending, I changed the class name so it would look better in the DOM.
+//   //       cell.classList.add('ship');
+//   //       shipEl.parentElement.removeChild(shipEl);
+
+//   //       shipEl.removeAttribute('draggable'); // removes dragged ships from the ship container.
+//   //       shipEl.removeEventListener('dragstart', handleDragstart);
+//   //     }
+//   //     const shipCoordinates = player1.gameboard.getShipCoordinates(ship);
+//   //     console.log(shipCoordinates);
+
+//   //     shipCoordinates.forEach((item) => {
+//   //       let row = item[0];
+//   //       let col = item[1];
+//   //       let shipElements = document.querySelector(
+//   //         `[data-row="${row}"][data-col="${col}"]`
+//   //       );
+//   //       shipElements.classList.add('ship');
+//   //     });
+
+//   //     console.log(JSON.stringify(shipCoordinates));
+
+//   //     console.log(player1.gameboard.board);
+//   //   });
+//   // });
+//   // //END OF DRAG AND ROP FOR PLAYER1 SHIPS
+
+
+//   const computerCells = document.querySelectorAll('.computer-board .box');
+//   computerCells.forEach((cell) => {
+//     cell.addEventListener('click', handlePlayerClick);
+//   });
+
+
+
+
+// };
+

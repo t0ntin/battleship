@@ -1,7 +1,6 @@
 
 import { Ship } from "./ship";
-import { makeElement } from "./cache-dom";
-import { page } from "./cache-dom";
+
 export class Gameboard {
   constructor() {
     this.board = []; // this is your container for 10 rows

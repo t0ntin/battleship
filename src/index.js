@@ -1,12 +1,11 @@
 import './style.css';
-import { Gameboard } from './gameboard';
-import { Ship } from './ship';
-import { Player } from './Player.js';
-// import { makeElement } from './cache-dom';
+
 import { controlTurns } from './controller';
 console.log("testt");
 
+
 controlTurns();
+
 
 // const gameboard1 = new Gameboard();
 // gameboard1.drawBoard();

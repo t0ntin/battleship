@@ -17,11 +17,11 @@ export class Player  {
     const destroyer = new Ship(2);
     // const shipTypes = [destroyer, submarine, cruiser, battleShip, aircraftCarrier];
     
-    const destroyer1 = new Ship(2);
-    const destroyer2 = new Ship(2);
-    const destroyer3 = new Ship(2);
-    const destroyer4 = new Ship(2);
-    const destroyer5 = new Ship(2);
+    const destroyer1 = new Ship(2, 'carrier');
+    const destroyer2 = new Ship(2, 'battleship');
+    const destroyer3 = new Ship(2, 'cruiser');
+    const destroyer4 = new Ship(2, 'submarine');
+    const destroyer5 = new Ship(2, 'destroyer');
     
     const shipTypes = [destroyer1, destroyer2, destroyer3, destroyer4, destroyer5];
     // this.placeShip(destroyer1, 0, 0, 'vertical', destroyer.length);
@@ -45,6 +45,7 @@ export class Player  {
       };
     });
   }
+  
   computerAttack(player) {
     while (true) {
         const randomRow = Math.floor(Math.random() * 10);

@@ -1,12 +1,23 @@
-import { controlTurns } from "./controller";
 import { Ship } from "./ship";
+
 
 const myPage = () => {
   const playerBoard = document.querySelector('.player1-board')
   const computerBoard = document.querySelector('.computer-board')
+  const computerBoardEls = document.querySelectorAll('.computer-board .box');
+  const player1BoardEls = document.querySelectorAll('.player1-board .box');
   const shipContainer = document.querySelector('.ship-container')
-  return {playerBoard, computerBoard, shipContainer}
+  const randomizeEl = document.querySelector('.randomize-button')
+  const carrierEl = document.querySelector('.carrier');
+  const battleshipEl = document.querySelector('.battleship');
+  const cruiserEl = document.querySelector('.cruiser');
+  const submarineEl = document.querySelector('.submarine');
+  const destroyerEl = document.querySelector('.destroyer');
+
+  return {playerBoard, computerBoard,computerBoardEls, player1BoardEls, shipContainer, randomizeEl, carrierEl, battleshipEl, cruiserEl, submarineEl, destroyerEl}
 }
+
+
 export const page = myPage();
 
 export function makeElement(elementTag, className, appendToEl, textInside) {
@@ -33,27 +44,32 @@ export const drawPlayer1BoardInDOM = (player1) => {
       element.dataset.coordinates = `${rowIndex},${colIndex}`;
       element.dataset.row = rowIndex;
       element.dataset.col = colIndex;
-      if (cell instanceof Ship) {
-        element.classList.add('ship'); // 🩶 show ships visually
+      if (cell instanceof Ship && cell.name === 'carrier') {
+        element.classList.add('carrier'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'battleship') {
+        element.classList.add('battleship'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'cruiser') {
+        element.classList.add('cruiser'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'submarine') {
+        element.classList.add('submarine'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'destroyer') {
+        element.classList.add('destroyer'); // 🩶 show ships visually
+      }
+      if (cell === 'hit') {
+        element.classList.add('hit');
+      }
+      if (cell === 'miss') {
+        element.classList.add('miss');
       }
       page.playerBoard.append(element);
     });
   });
 };
 
-// THIS IS A WORKING VERSION
-// export const drawPlayer1BoardInDOM = (player1) => {
-//   page.playerBoard.innerHTML = ''; // clear before redrawing
-//   player1.gameboard.board.forEach(row => {
-//     row.forEach(cell => {
-//       const element = makeElement('div', 'box');
-//       if (cell instanceof Ship) {
-//         element.classList.add('ship'); // 🩶 show ships visually
-//       }
-//       page.playerBoard.append(element);
-//     });
-//   });
-// };
 
 export const drawComputerBoardInDOM = (computer) => {
   page.computerBoard.innerHTML = ''; // clear before redrawing
@@ -62,8 +78,20 @@ export const drawComputerBoardInDOM = (computer) => {
       const element = makeElement('div', 'box');
       element.dataset.row = rowIndex;
       element.dataset.col = colIndex;
-      if (cell instanceof Ship) {
-        element.classList.add('ship'); // 🩶 show ships visually
+      if (cell instanceof Ship && cell.name === 'carrier') {
+        element.classList.add('carrier'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'battleship') {
+        element.classList.add('battleship'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'cruiser') {
+        element.classList.add('cruiser'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'submarine') {
+        element.classList.add('submarine'); // 🩶 show ships visually
+      }
+      if (cell instanceof Ship && cell.name === 'destroyer') {
+        element.classList.add('destroyer'); // 🩶 show ships visually
       }
       page.computerBoard.append(element);
     });
@@ -71,7 +99,7 @@ export const drawComputerBoardInDOM = (computer) => {
 };
 
 
-const box1 = makeElement('div', 'box', page.grid1)
+// const box1 = makeElement('div', 'box', page.grid1)
 
-export const box = makeElement('div', 'box', document.body, 'x');
+// export const box = makeElement('div', 'box', document.body, 'x');
 
