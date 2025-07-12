@@ -11,13 +11,18 @@ import {
   const destroyer = new Ship(2, 'destroyer');
   return [carrier, battleShip, cruiser, submarine, destroyer];
 }
+
 // SHIPTYPES IS AN ARRAY OF SHPS
 const shipTypes = availableShips();
+
+
 let currentOrientation = 'vertical';
 let shipSelectedByUser = 'battleship';
 export const controlTurns = () => {
   const player1 = new Player();
   const computer = new Player();
+
+
 
   // Draw logical boards
   player1.gameboard.drawBoard();
@@ -49,7 +54,6 @@ export const controlTurns = () => {
   addComputerBoardListeners();
 
   const foundShipName = shipTypes.find(ship => ship.name === shipSelectedByUser);
-  console.log(foundShipName);
   addHoverPlacementListeners(foundShipName, currentOrientation);
 
   // ---- Local Functions ---- //
@@ -160,9 +164,43 @@ export const controlTurns = () => {
         document.querySelectorAll('.hover-preview').forEach(c => c.classList.remove('hover-preview'));
       });
     });
+
+    function handleMouseEnter(e) {
+      const row = Number(e.target.dataset.row);
+      const col = Number(e.target.dataset.col);
+      const hoverCoords = player1.gameboard.getPotentialShipCoordinates(
+        ship.length,
+        row,
+        col,
+        currentOrientation
+      );
+      // console.log(hoverCoords);
+    
+      if (!hoverCoords) return; // out of bounds
+    
+      // Check if placement is valid
+      const isValid = hoverCoords.every(([r, c]) => {
+        return player1.gameboard.board[r][c] === null;
+      });
+    
+      hoverCoords.forEach(([r, c]) => {
+        const cell = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+        cell.classList.add(isValid ? 'valid-hover' : 'invalid-hover');
+      });
+    }
+    
+    function handleMouseLeave(e) {
+      document.querySelectorAll('.valid-hover, .invalid-hover').forEach(cell => {
+        cell.classList.remove('valid-hover', 'invalid-hover');
+      });
+    }
+    page.player1BoardEls.forEach(cell => {
+      cell.addEventListener('mouseenter', handleMouseEnter);
+      cell.addEventListener('mouseleave', handleMouseLeave);
+    });
+    
   }
-  
-  
+
 };
 
 // BUTTON TO RANDOMIZE THE BOARD
@@ -170,6 +208,11 @@ const randomizePlayer1Board = () =>{
   controlTurns();
 }
 page.randomizeEl.addEventListener('click', randomizePlayer1Board)
+
+// ******************************
+// getShipCoordinates is returning undefined. Find out why.
+// **********************8**********
+
 
 // const getShipInfo = () => {
 //   const ships = {};

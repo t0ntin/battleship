@@ -128,6 +128,22 @@ export class Gameboard {
     return coordinates;
   }
 
+  getPotentialShipCoordinates(length, startRow, startCol, orientation) {
+    const coordinates = [];
+    for (let i = 0; i < length; i++) {
+      let row = startRow;
+      let col = startCol;
+      if (orientation === 'horizontal') col += i;
+      else row += i;
+  
+      // Check boundaries
+      if (row >= 10 || col >= 10) return null; 
+  
+      coordinates.push([row, col]);
+    }
+    return coordinates;
+  }
+  
   // removeShip(ship) {
   //   this.board.forEach((row, rowindex) => {
   //     row.forEach((col, colIndex) => {
