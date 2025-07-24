@@ -17,10 +17,10 @@ export class Player  {
     const destroyer = new Ship(2);
     // const shipTypes = [destroyer, submarine, cruiser, battleShip, aircraftCarrier];
     
-    const destroyer1 = new Ship(2, 'carrier');
-    const destroyer2 = new Ship(2, 'battleship');
-    const destroyer3 = new Ship(2, 'cruiser');
-    const destroyer4 = new Ship(2, 'submarine');
+    const destroyer1 = new Ship(5, 'carrier');
+    const destroyer2 = new Ship(4, 'battleship');
+    const destroyer3 = new Ship(3, 'cruiser');
+    const destroyer4 = new Ship(3, 'submarine');
     const destroyer5 = new Ship(2, 'destroyer');
     
     const shipTypes = [destroyer1, destroyer2, destroyer3, destroyer4, destroyer5];

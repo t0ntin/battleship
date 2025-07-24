@@ -22,7 +22,7 @@ export const initialize = () => {
   const main = makeElement('div', 'main', document.body, 'test');
   const player1Board = makeElement('div', 'player1-board', main, 'player-1board');
   const randomPlacementEl = makeElement('button', 'random-placement-button', main, 'randomize placement' )
-  const middleContainer = makeElement('div', 'middle-container', main, 'middle-container')
+  const middleContainer = makeElement('div', 'middle-container', main)
   const computerBoard = makeElement('div', 'computer-board', main, 'computer-board');
   const handleRandomization = createRandomizationHandler(player1Board);
   main.addEventListener('click', handleRandomization);
@@ -40,8 +40,8 @@ export const initialize = () => {
   players.computer.setUpFleet();
 
   // Draw boards visually
-  console.log(players.player1);
-  console.log(player1Board);
+  // console.log(players.player1);
+  // console.log(player1Board);
   drawPlayer1BoardInDOM(players.player1, player1Board);
   drawComputerBoardInDOM(players.computer, computerBoard);
 
@@ -58,12 +58,13 @@ export const initialize = () => {
     if (!cell) return;
     if (!gameState.isPlayerTurn) return;
 
-    const playerMissed = handlePlayerClick(e, players.player1, players.computer, player1Board, computerBoard, gameState);
+    const playerMissed = handlePlayerClick(e, players.player1, players.computer, player1Board, computerBoard, gameState, middleContainer);
 
     if (playerMissed) {
         isPlayerTurn = false;
         setTimeout(() => {
-            computerTurn(players.player1, players.computer, player1Board, computerBoard);
+          console.log("middleContainer:", middleContainer);
+            computerTurn(players.player1, players.computer, player1Board, computerBoard, gameState, middleContainer);
             gameState.isPlayerTurn = true;
         }, 500);
     }
@@ -73,7 +74,7 @@ export const initialize = () => {
   return {player1: players.player1, computer: players.computer};
 }
 
-function handlePlayerClick(e, player1, computer, player1Board, computerBoard, gameState) {
+function handlePlayerClick(e, player1, computer, player1Board, computerBoard, gameState, middleContainer) {
   const box = e.target;
   const row = Number(box.dataset.row);
   const col = Number(box.dataset.col);
@@ -92,9 +93,12 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
   if (result === 'hit') {
     box.classList.add('hit');
     console.log('You hit! Go again.');
+    // middleContainer.innerText = 'It\'s a hit! Your turn again.';
+    fadeText(middleContainer, 'It\'s a hit! Your turn again.')
   } else {
     box.classList.add('miss');
     console.log("You missed! Computer's turn.");
+    fadeText(middleContainer, 'You missed. It\'s the computer\'s turn.')
 
     // Check win condition after player turn
     if (!computer.gameboard.countSunkShips()) {
@@ -105,8 +109,8 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
 
     // Computer's turn
     setTimeout(() => {
-      computerTurn(player1, computer, player1Board, computerBoard);
-    }, 500);
+      computerTurn(player1, computer, player1Board, computerBoard,  gameState,  middleContainer);
+    }, 2000);
   }
 
   // Check win condition after player hit
@@ -117,26 +121,35 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
   }
 }
 
-function computerTurn(player1, computer, player1Board, gameState) {
+function computerTurn(player1, computer, player1Board, computerBoard, gameState, middleContainer) {
+  function attackLoop() {
+    if (gameState.gameOver) return;
 
-  let result;
-  do {
-    result = computer.computerAttack(player1);
+    const result = computer.computerAttack(player1);
     drawPlayer1BoardInDOM(player1, player1Board);
 
     if (!player1.gameboard.countSunkShips()) {
       console.log('Computer wins!');
+      fadeText(middleContainer, 'Computer wins!');
       gameState.gameOver = true;
       return;
     }
 
     if (result === 'hit') {
       console.log('Computer hit! Computer goes again.');
+      fadeText(middleContainer, "Computer hit! It's the computer's turn.");
+
+      // Wait before attacking again so the message is visible
+      setTimeout(attackLoop, 1000);
     } else {
       console.log('Computer missed! Your turn.');
+      fadeText(middleContainer, "Computer missed! It's your turn.");
+      // Return control to the player
     }
-  } while (result === 'hit');
+  }
+  attackLoop();
 }
+
 
 const createRandomizationHandler = (player1Board) => {
   return (e) => {
@@ -149,7 +162,55 @@ const createRandomizationHandler = (player1Board) => {
   };
 };
 
+const fadeText = (element, newText) => {
+  // Remove oldest message if we have 2 already
+  const messages = element.querySelectorAll('.text-updates');
+  if (messages.length >= 2) {
+    messages[0].remove();
+  }
 
+  // Create new message
+  const textEl = makeElement('div', 'text-updates', element);
+  textEl.textContent = newText;
+
+  // Trigger animation
+  void textEl.offsetWidth;
+  textEl.classList.add('visible');
+};
+
+
+
+// *****************
+// FIND OUT WHY IT MOVES SO FAST AFTER PLAYER1 MISSES
+// MAKE THE TEXT CONTAINER 3 MESSAGES TALL.
+// ****************
+// const fadeText = (element, newText) => {
+//   const textEl = makeElement('div', 'text-updates', element);
+
+//   textEl.append(newText, document.createElement('br'));
+
+//   // Trigger fade in on the next frame
+// // Force reflow
+// void textEl.offsetWidth;
+// textEl.style.opacity = '1';
+
+// };
+
+// const fadeText = (element, newText) => {
+//   // Fade out
+//   const textEl = makeElement('span', '.text-updates', element);
+//   textEl.style.opacity = '0';
+//   // Wait for fade out to complete (500ms matches our CSS transition)
+//   setTimeout(() => {
+//     // Change text when invisible
+//     // element.innerText = newText;
+//     // element.append(textEl);
+//     textEl.append(newText, document.createElement('br'));
+    
+//     // Fade back in
+//     textEl.style.opacity = '1';
+//   }, 500);
+// };
 // function addComputerBoardListeners(player1, computer, player1Board, computerBoard) {
 //   const computerBoardEls = document.querySelectorAll('.computer-board .box');
 //   computerBoardEls.forEach((cell) => {
