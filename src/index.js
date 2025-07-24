@@ -1,10 +1,10 @@
 import './style.css';
 
-import { controlTurns } from './controller';
+import { initialize } from './controller';
 console.log("testt");
 
 
-controlTurns();
+initialize();
 
 
 // const gameboard1 = new Gameboard();

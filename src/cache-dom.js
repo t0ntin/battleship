@@ -1,24 +1,25 @@
 import { Ship } from "./ship";
 
 
-const myPage = () => {
-  const playerBoard = document.querySelector('.player1-board')
-  const computerBoard = document.querySelector('.computer-board')
-  const computerBoardEls = document.querySelectorAll('.computer-board .box');
-  const player1BoardEls = document.querySelectorAll('.player1-board .box');
-  const shipContainer = document.querySelector('.ship-container')
-  const randomizeEl = document.querySelector('.randomize-button')
-  const carrierEl = document.querySelector('.carrier');
-  const battleshipEl = document.querySelector('.battleship');
-  const cruiserEl = document.querySelector('.cruiser');
-  const submarineEl = document.querySelector('.submarine');
-  const destroyerEl = document.querySelector('.destroyer');
+// export const myPage = () => {
+//   const playerBoard = document.querySelector('.player1-board')
+//   const computerBoard = document.querySelector('.computer-board')
+//   const computerBoardEls = document.querySelectorAll('.computer-board .box');
+//   const player1BoardEls = document.querySelectorAll('.player1-board .box');
+//   const shipContainer = document.querySelector('.ship-container')
+//   const randomizeEl = document.querySelector('.randomize-button')
+//   const carrierEl = document.querySelector('.carrier');
+//   const battleshipEl = document.querySelector('.battleship');
+//   const cruiserEl = document.querySelector('.cruiser');
+//   const submarineEl = document.querySelector('.submarine');
+//   const destroyerEl = document.querySelector('.destroyer');
 
-  return {playerBoard, computerBoard,computerBoardEls, player1BoardEls, shipContainer, randomizeEl, carrierEl, battleshipEl, cruiserEl, submarineEl, destroyerEl}
-}
+//   return {playerBoard, computerBoard,computerBoardEls, player1BoardEls, shipContainer, randomizeEl, carrierEl, battleshipEl, cruiserEl, submarineEl, destroyerEl}
+// }
 
 
-export const page = myPage();
+// export const page = myPage();
+
 
 export function makeElement(elementTag, className, appendToEl, textInside) {
   const element = document.createElement(elementTag);
@@ -32,8 +33,8 @@ export function makeElement(elementTag, className, appendToEl, textInside) {
   return element;
 }
 
-export const drawPlayer1BoardInDOM = (player1) => {
-  page.playerBoard.innerHTML = ''; // clear before redrawing
+export const drawPlayer1BoardInDOM = (player1, player1Board) => {
+  player1Board.innerHTML = ''; // clear before redrawing
   // row => Go to the (first) array.
   // rowindex => get the index "of the array" (the first row, the second row, etc)
   // cell => go to the (first) row.
@@ -65,14 +66,14 @@ export const drawPlayer1BoardInDOM = (player1) => {
       if (cell === 'miss') {
         element.classList.add('miss');
       }
-      page.playerBoard.append(element);
+      player1Board.append(element);
     });
   });
 };
 
 
-export const drawComputerBoardInDOM = (computer) => {
-  page.computerBoard.innerHTML = ''; // clear before redrawing
+export const drawComputerBoardInDOM = (computer, computerBoard) => {
+  computerBoard.innerHTML = ''; // clear before redrawing
   computer.gameboard.board.forEach((row, rowIndex) => {   // ✅ fixed here
     row.forEach((cell, colIndex) => {                     // ✅ fixed here
       const element = makeElement('div', 'box');
@@ -93,7 +94,7 @@ export const drawComputerBoardInDOM = (computer) => {
       if (cell instanceof Ship && cell.name === 'destroyer') {
         element.classList.add('destroyer'); // 🩶 show ships visually
       }
-      page.computerBoard.append(element);
+      computerBoard.append(element);
     });
   });
 };

@@ -12,6 +12,7 @@
 
 body {
   background-color: rgb(36, 36, 36);
+  color: white;
 }
 
 .main {
@@ -26,8 +27,8 @@ body {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   grid-template-columns: repeat(10, 1fr);
-  width: 200px;  
-  height: 200px;
+  width: 290px;  
+  height: 290px;
   /* border: 1px, solid rgb(179, 177, 177); */
 
 }
@@ -42,7 +43,7 @@ body {
   background-color: #1E3F66;
 }
 
-.ship-section {
+.middle-container {
   width: 200px;
   height: 200px;
   border: 1px solid white;
