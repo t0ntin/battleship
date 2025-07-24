@@ -21,8 +21,12 @@ const createPlayers = () => {
 export const initialize = () => {
   const main = makeElement('div', 'main', document.body, 'test');
   const player1Board = makeElement('div', 'player1-board', main, 'player-1board');
+  const randomPlacementEl = makeElement('button', 'random-placement-button', main, 'randomize placement' )
   const middleContainer = makeElement('div', 'middle-container', main, 'middle-container')
   const computerBoard = makeElement('div', 'computer-board', main, 'computer-board');
+  const handleRandomization = createRandomizationHandler(player1Board);
+  main.addEventListener('click', handleRandomization);
+
   const players = createPlayers();
 
   players.player1.gameboard.drawBoard();
@@ -133,6 +137,18 @@ function computerTurn(player1, computer, player1Board, gameState) {
     }
   } while (result === 'hit');
 }
+
+const createRandomizationHandler = (player1Board) => {
+  return (e) => {
+    if (e.target.matches('.random-placement-button')) {
+      const players = createPlayers();
+      players.player1.gameboard.drawBoard();
+      players.player1.setUpFleet();
+      drawPlayer1BoardInDOM(players.player1, player1Board);
+    }
+  };
+};
+
 
 // function addComputerBoardListeners(player1, computer, player1Board, computerBoard) {
 //   const computerBoardEls = document.querySelectorAll('.computer-board .box');

@@ -129,3 +129,21 @@ body {
   background-color: rgb(255, 0, 0);
 }
 
+.random-placement-button {
+  width: 170px;
+  height: 30px;
+  padding: 3px 3px;
+  background-color: black; /* Blue */
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+}
+
+.random-placement-button:hover {
+  background-color: rgb(53, 52, 52);
+}
+
