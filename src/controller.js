@@ -165,7 +165,7 @@ const createRandomizationHandler = (player1Board) => {
 const fadeText = (element, newText) => {
   // Remove oldest message if we have 2 already
   const messages = element.querySelectorAll('.text-updates');
-  if (messages.length >= 2) {
+  if (messages.length >= 3) {
     messages[0].remove();
   }
 
@@ -175,7 +175,7 @@ const fadeText = (element, newText) => {
 
   // Trigger animation
   void textEl.offsetWidth;
-  textEl.classList.add('visible');
+  textEl.classList.toggle('visible');
 };
 
 

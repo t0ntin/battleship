@@ -45,13 +45,13 @@ body {
 
 .middle-container {
   width: auto;
-  height: 38px; /* Fixed height */
+  height: 57px; 
   border: 1px solid white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: hidden; /* Hide overflow */
-  /* position: relative;  */
+  overflow: none; 
+  position: relative; 
   line-height: 19px; /* Half container height */
 }
 
@@ -176,22 +176,40 @@ body {
 
 /* Message element base styles */
 .text-updates {
-  /* position: absolute; */
+  position: absolute;
   width: 100%;
   text-align: center;
   opacity: 0;
-  /* transform: translateY(10px); */
+  /* transform: translateY(0); */
   transition: 
-    opacity 0.5s ease,
-    transform 0.5s ease;
-  pointer-events: none; /* Allow clicks through to container */
+  opacity 0.5s ease-in-out,
+  transform 0.5s ease-in-out;
+  pointer-events: none; 
+}
+
+/* Only animate the bottom message */
+.text-updates:nth-last-child(1) { 
+  bottom: 0;
+  /* STARTS SLIGHTLY FROM THE BOTTOM */
+  transform: translateY(7px);
+  transition: 
+    opacity 0.5s ease-in-out,
+    transform 0.5s ease-in-out;
+  color: red;
+}
+
+.text-updates:nth-last-child(2) { 
+
+  top: 19px; 
+  transform: translateY(0); 
+}
+
+.text-updates:nth-last-child(3) { 
+  top: 0;  
 }
 
 .text-updates.visible {
   opacity: 1;
   transform: translateY(0);
+  /* color: red; */
 }
-
-/* Position messages - newest at bottom */
-/* .text-updates:nth-last-child(1) { bottom: 0; }
-.text-updates:nth-last-child(2) { top: 0; } */
