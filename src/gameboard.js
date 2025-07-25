@@ -7,73 +7,48 @@ export class Gameboard {
     this.numberofShips = 0;
     this.placedShips = [];
   }
-  drawBoard() { // created this function first
 
+  drawBoard() {
+    this.board = [];
     for (let i = 0; i < 10; i++) {
-      const row = []; // this is one row
-      for (let j = 0; j < 10; j++) {
-        
-        row.push(null); // fill each row with 10 cells (currently empty)
-      }
-      this.board.push(row); // add the row to your board
+        this.board.push(Array(10).fill(null));
     }
-    // console.log(this.board);
-  }
+}
 
-  checkForShips(shipType,rowIndex, colIndex, direction) { //created this function third
-
+  checkForShips(shipType, rowIndex, colIndex, direction) {
     for (let i = 0; i < shipType.length; i++) {
-      if (direction === 'horizontal') {
-        if (colIndex + i >= 10) {
-          return true; // Out of bounds, treat as overlap to block placement
+        if (direction === 'horizontal') {
+            if (colIndex + i >= 10) return true; // out of bounds
+            if (this.board[rowIndex][colIndex + i] !== null) return true; // overlap
+        } else if (direction === 'vertical') {
+            if (rowIndex + i >= 10) return true; // out of bounds
+            if (this.board[rowIndex + i][colIndex] !== null) return true; // overlap
         }
-          if (this.board[rowIndex][colIndex + i] instanceof Ship) {
-              console.log('Cannot place ship here: overlap detected.');
-              return true; //I had 'return' only here initially. I thought return would be the same as return true, but it's not. checkForShips() inside of placeShip() needs to be true for it to stop.
-          }
-      } else if (direction === 'vertical') {
-        if (rowIndex + i >= 10) {
-          return true; // Out of bounds, treat as overlap to block placement
-        }
-          if (this.board[rowIndex + i][colIndex] instanceof Ship) {
-              console.log('Cannot place ship here: overlap detected.');
-              return true; // exit placeShip early
-          }
-      }
     }
-    return false; //no overlap detected.
-  }
+    return false;
+}
+
   
-  placeShip(shipType, rowIndex, colIndex, direction) { // Created this function second.
-    const allFiveShipsPlaced = this.checkNumberOfShipsPlaced();
-    if (allFiveShipsPlaced === false) {
-      return false;
-    }
-    if (this.checkForShips(shipType, rowIndex, colIndex, direction, shipType.length)) {
-      console.log('overlap found. Exiting');
-      return false; // overlap found, exit early
-    }
-    if (direction === 'horizontal' && colIndex + shipType.length <= 10) {
-      // If colindex is 8 and length is 4, it goes to position (0,8), then it adds the length of the ship, which is 4, and it evaluates to false, so it doesn't place the ship.
-      for (let i = 0; i < shipType.length; i++) {
-        this.board[rowIndex][colIndex +i] = shipType;
-      }
-      this.placedShips.push(shipType);
-      // console.log(this.placedShips);
-    }
-    if (direction === 'vertical' && rowIndex + shipType.length <=10) {
-      // if direction is vertical, rowindex is 3, and colindex is 0, it goes to the (fourth) row, then the first column (0), then adds the rowindex to the length of the ship (7). Then it types in ship in boxes (0,3) to (0,7 which is [6)])
-      for ( let i=0; i < shipType.length; i++) {
+  placeShip(shipType, rowIndex, colIndex, direction) {
+    // Ensure ship fits within board
+    if (direction === 'horizontal' && colIndex + shipType.length > 10) return false;
+    if (direction === 'vertical' && rowIndex + shipType.length > 10) return false;
 
-        this.board[rowIndex +i][colIndex] = shipType;
-      }
-      this.placedShips.push(shipType);
-      // console.log(this.placedShips);
+    // Ensure no overlap
+    if (this.checkForShips(shipType, rowIndex, colIndex, direction)) return false;
 
+    // Place the ship
+    for (let i = 0; i < shipType.length; i++) {
+        if (direction === 'horizontal') {
+            this.board[rowIndex][colIndex + i] = shipType;
+        } else if (direction === 'vertical') {
+            this.board[rowIndex + i][colIndex] = shipType;
+        }
     }
-    // console.log(JSON.stringify(this.board));
+    this.placedShips.push(shipType);
     return true;
-  }
+}
+
 
   receiveAttack(rowIndex, colIndex) {
     let currentCell = this.board[rowIndex][colIndex];

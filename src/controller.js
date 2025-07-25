@@ -19,15 +19,17 @@ const createPlayers = () => {
 }
 
 export const initialize = () => {
+  console.log('initialize called');
+
   const main = makeElement('div', 'main', document.body, 'test');
   const player1Board = makeElement('div', 'player1-board', main, 'player-1board');
   const randomPlacementEl = makeElement('button', 'random-placement-button', main, 'randomize placement' )
   const middleContainer = makeElement('div', 'middle-container', main)
   const computerBoard = makeElement('div', 'computer-board', main, 'computer-board');
-  const handleRandomization = createRandomizationHandler(player1Board);
-  main.addEventListener('click', handleRandomization);
-
   const players = createPlayers();
+
+  const handleRandomization = createRandomizationHandler(player1Board, players);
+  main.addEventListener('click', handleRandomization);
 
   players.player1.gameboard.drawBoard();
   players.computer.gameboard.drawBoard();
@@ -110,7 +112,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     // Computer's turn
     setTimeout(() => {
       computerTurn(player1, computer, player1Board, computerBoard,  gameState,  middleContainer);
-    }, 2000);
+    }, 1000);
   }
 
   // Check win condition after player hit
@@ -140,7 +142,7 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
       fadeText(middleContainer, "Computer hit! It's the computer's turn.");
 
       // Wait before attacking again so the message is visible
-      setTimeout(attackLoop, 1000);
+      setTimeout(attackLoop, 500);
     } else {
       console.log('Computer missed! Your turn.');
       fadeText(middleContainer, "Computer missed! It's your turn.");
@@ -150,17 +152,27 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
   attackLoop();
 }
 
-
-const createRandomizationHandler = (player1Board) => {
+const createRandomizationHandler = (player1Board, players) => {
   return (e) => {
     if (e.target.matches('.random-placement-button')) {
-      const players = createPlayers();
+      console.log('Randomization button clicked');
       players.player1.gameboard.drawBoard();
       players.player1.setUpFleet();
       drawPlayer1BoardInDOM(players.player1, player1Board);
     }
   };
 };
+
+// const createRandomizationHandler = (player1Board) => {
+//   return (e) => {
+//     if (e.target.matches('.random-placement-button')) {
+//       const players = createPlayers();
+//       players.player1.gameboard.drawBoard();
+//       players.player1.setUpFleet();
+//       drawPlayer1BoardInDOM(players.player1, player1Board);
+//     }
+//   };
+// };
 
 const fadeText = (element, newText) => {
   // Remove oldest message if we have 2 already
@@ -181,8 +193,8 @@ const fadeText = (element, newText) => {
 
 
 // *****************
-// FIND OUT WHY IT MOVES SO FAST AFTER PLAYER1 MISSES
-// MAKE THE TEXT CONTAINER 3 MESSAGES TALL.
+// MAKE SURE ALL MESSAGES ARE DISPLAYED (WINNING, LOSING MSGS, ETC)
+// DISABLE THE BUTTON AFTER THE GAME STARTS.
 // ****************
 // const fadeText = (element, newText) => {
 //   const textEl = makeElement('div', 'text-updates', element);
