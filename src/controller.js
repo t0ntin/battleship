@@ -1,5 +1,7 @@
+
 import { Player } from './Player';
 import { Ship } from './ship';
+import { explosion1, explosion2, miss } from './sounds';
 import {
   drawPlayer1BoardInDOM, drawComputerBoardInDOM, makeElement} from './cache-dom';
 
@@ -64,6 +66,7 @@ export const initialize = () => {
 
     if (playerMissed) {
         isPlayerTurn = false;
+        // playSound(playerMissed);
         setTimeout(() => {
           console.log("middleContainer:", middleContainer);
             computerTurn(players.player1, players.computer, player1Board, computerBoard, gameState, middleContainer);
@@ -80,18 +83,19 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
   const box = e.target;
   const row = Number(box.dataset.row);
   const col = Number(box.dataset.col);
-
+  const coordsHit = computer.gameboard.board[row][col];
   // Prevent attacking same spot twice
-  // console.log(computer.gameboard);
   if (
-    computer.gameboard.board[row][col] === 'hit' ||
-    computer.gameboard.board[row][col] === 'miss'
+    coordsHit === 'hit' ||
+    coordsHit === 'miss'
   ) {
     fadeText(middleContainer, 'Already attacked there. Try again.')
     return;
   }
-
+  
   const result = computer.gameboard.receiveAttack(row, col);
+
+
   if (result === 'already-attacked') {
     fadeText(middleContainer, 'Already attacked there. Try again.')
     return; // do nothing, don't switch turns
@@ -100,12 +104,14 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     checkIfShipSunk(computer, row, col, middleContainer);
     box.classList.add('hit');
     console.log('You hit! Go again.');
-    // middleContainer.innerText = 'It\'s a hit! Your turn again.';
     fadeText(middleContainer, 'It\'s a hit! Your turn again.')
+    playSound(result, coordsHit);
+
   } else {
     box.classList.add('miss');
     console.log("You missed! Computer's turn.");
     fadeText(middleContainer, 'You missed. It\'s the computer\'s turn.')
+    playSound(result);
 
     // Check win condition after player turn
     if (!computer.gameboard.countSunkShips()) {
@@ -176,7 +182,6 @@ const handleStartGameClick = (main, players, computerBoard) => {
       randomizePlacementEl.disabled = true;
       startGameEl.disabled = true;
       drawComputerBoardInDOM(players.computer, computerBoard);
-
     }
   });
 }
@@ -204,6 +209,26 @@ const checkIfShipSunk = (player, row, col, middleContainer) => {
 	}
 }
 
+const playSound = (result, coordsHit) => {
+  const missSound = new Audio(miss);
+  const explosion1Sound = new Audio(explosion1);
+  const explosion2Sound = new Audio(explosion2);
+  if (result === 'miss') {
+    missSound.play();
+  }
+  if (result === 'hit') {
+    explosion1Sound.play();
+  }
+  if (coordsHit instanceof Ship && coordsHit.isSunk === true) {
+    explosion2Sound.play();
+  }
+}
+
+// const playSunkShipSound = (coordsHit) {
+//   if (coordsHit instanceof Ship && coordsHit.isSunk === true) {
+    
+//   }
+// }
 // *****************
 // MAKE SURE ALL MESSAGES ARE DISPLAYED (WINNING, LOSING MSGS, ETC)
 // DISABLE THE BUTTON AFTER THE GAME STARTS.

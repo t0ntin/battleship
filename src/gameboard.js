@@ -48,28 +48,30 @@ export class Gameboard {
     return true;
 }
 
-receiveAttack(rowIndex, colIndex) {
-  let currentCell = this.board[rowIndex][colIndex];
+  receiveAttack(rowIndex, colIndex) {
+    let currentCell = this.board[rowIndex][colIndex];
+    // Check if the cell has already been attacked
+    if (
+      currentCell === 'miss' ||
+      (currentCell instanceof Ship && currentCell.hits.some(([r, c]) => r === rowIndex && c === colIndex))
+    ) {
+      console.log('Cell has already been attacked.');
+      return 'already-attacked';
+    }
 
-  // Check if the cell has already been attacked
-  if (
-    currentCell === 'miss' ||
-    (currentCell instanceof Ship && currentCell.hits.some(([r, c]) => r === rowIndex && c === colIndex))
-  ) {
-    console.log('Cell has already been attacked.');
-    return 'already-attacked';
+    // If it's a Ship
+    if (currentCell instanceof Ship) {
+      currentCell.increaseNumberOfHits(rowIndex, colIndex);
+      currentCell.determineIfSunk();
+      return 'hit';
+    } else {
+      this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
+      return 'miss';
+    }
   }
 
-  // If it's a Ship
-  if (currentCell instanceof Ship) {
-    currentCell.increaseNumberOfHits(rowIndex, colIndex);
-    currentCell.determineIfSunk();
-    return 'hit';
-  } else {
-    this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
-    return 'miss';
-  }
-}
+  
+
 
   // receiveAttack(rowIndex, colIndex) {
   //   let currentCell = this.board[rowIndex][colIndex];
@@ -123,6 +125,18 @@ receiveAttack(rowIndex, colIndex) {
     })
     return coordinates;
   }
+
+  // getShipCoordinates(ship) {
+  //   const coordinates = []
+  //   this.board.forEach((row, rowIndex) => {
+  //     row.forEach((col, colIndex) => {
+  //       if (col === ship) {
+  //         coordinates.push([rowIndex, colIndex])
+  //       }
+  //     })
+  //   })
+  //   return coordinates;
+  // }
 
   getPotentialShipCoordinates(length, startRow, startCol, orientation) {
     const coordinates = [];
