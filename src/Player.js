@@ -11,18 +11,18 @@ export class Player  {
 
   setUpFleet() {
     const ships = [
-      new Ship(5, 'carrier'),
-      new Ship(4, 'battleship'),
-      new Ship(3, 'cruiser'),
-      new Ship(3, 'submarine'),
-      new Ship(2, 'destroyer'),
+      new Ship(1, 'carrier'),
+      new Ship(1, 'battleship'),
+      new Ship(1, 'cruiser'),
+      new Ship(1, 'submarine'),
+      new Ship(1, 'destroyer'),
     ];
 
     ships.forEach(shipType => {
       let placed = false;
       let attempts = 0;
       const maxAttempts = 100;
-      console.log(`Placing ${shipType.name}...`);
+      // console.log(`Placing ${shipType.name}...`);
       while (!placed && attempts < maxAttempts) {
           const randomRow = Math.floor(Math.random() * 10);
           const randomCol = Math.floor(Math.random() * 10);

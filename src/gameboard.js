@@ -28,7 +28,6 @@ export class Gameboard {
     return false;
 }
 
-  
   placeShip(shipType, rowIndex, colIndex, direction) {
     // Ensure ship fits within board
     if (direction === 'horizontal' && colIndex + shipType.length > 10) return false;
@@ -49,27 +48,50 @@ export class Gameboard {
     return true;
 }
 
+receiveAttack(rowIndex, colIndex) {
+  let currentCell = this.board[rowIndex][colIndex];
 
-  receiveAttack(rowIndex, colIndex) {
-    let currentCell = this.board[rowIndex][colIndex];
-
-    // Check if the cell has already been hit
-    if (currentCell === 'hit' || currentCell === 'miss') {
-        console.log('Cell has already been attacked.');
-        return 'already-attacked';  // or handle appropriately
-    }
-    
-    // Check if it is a Ship
-    if (currentCell instanceof Ship) {
-        currentCell.increaseNumberOfHits();
-        currentCell.determineIfSunk();
-        this.board[rowIndex][colIndex] = 'hit'; // Mark as hit
-        return 'hit';
-    } else {
-        this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
-        return 'miss';
-    }
+  // Check if the cell has already been attacked
+  if (
+    currentCell === 'miss' ||
+    (currentCell instanceof Ship && currentCell.hits.some(([r, c]) => r === rowIndex && c === colIndex))
+  ) {
+    console.log('Cell has already been attacked.');
+    return 'already-attacked';
   }
+
+  // If it's a Ship
+  if (currentCell instanceof Ship) {
+    currentCell.increaseNumberOfHits(rowIndex, colIndex);
+    currentCell.determineIfSunk();
+    return 'hit';
+  } else {
+    this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
+    console.log('returning miss');
+    return 'miss';
+  }
+}
+
+  // receiveAttack(rowIndex, colIndex) {
+  //   let currentCell = this.board[rowIndex][colIndex];
+
+  //   // Check if the cell has already been hit
+  //   if (currentCell === 'hit' || currentCell === 'miss') {
+  //       console.log('Cell has already been attacked.');
+  //       return 'already-attacked';  // or handle appropriately
+  //   }
+    
+  //   // Check if it is a Ship
+  //   if (currentCell instanceof Ship) {
+  //       currentCell.increaseNumberOfHits();
+  //       currentCell.determineIfSunk();
+  //       this.board[rowIndex][colIndex] = 'hit'; // Mark as hit
+  //       return 'hit';
+  //   } else {
+  //       this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
+  //       return 'miss';
+  //   }
+  // }
 
   countSunkShips() {
     let count = 0;

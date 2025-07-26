@@ -654,18 +654,18 @@ class Player  {
 
   setUpFleet() {
     const ships = [
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(5, 'carrier'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(4, 'battleship'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(3, 'cruiser'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(3, 'submarine'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(2, 'destroyer'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(1, 'carrier'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(1, 'battleship'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(1, 'cruiser'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(1, 'submarine'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(1, 'destroyer'),
     ];
 
     ships.forEach(shipType => {
       let placed = false;
       let attempts = 0;
       const maxAttempts = 100;
-      console.log(`Placing ${shipType.name}...`);
+      // console.log(`Placing ${shipType.name}...`);
       while (!placed && attempts < maxAttempts) {
           const randomRow = Math.floor(Math.random() * 10);
           const randomCol = Math.floor(Math.random() * 10);
@@ -857,7 +857,6 @@ const createPlayers = () => {
 }
 
 const initialize = () => {
-  console.log('initialize called');
 
   const main = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('div', 'main', document.body, 'test');
   const player1Board = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('div', 'player1-board', main, 'player-1board');
@@ -925,12 +924,17 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     computer.gameboard.board[row][col] === 'hit' ||
     computer.gameboard.board[row][col] === 'miss'
   ) {
-    console.log('Already attacked here.');
+    fadeText(middleContainer, 'Already attacked there. Try again.')
     return;
   }
-
+  
   const result = computer.gameboard.receiveAttack(row, col);
+  if (result === 'already-attacked') {
+    fadeText(middleContainer, 'Already attacked there. Try again.')
+    return; // do nothing, don't switch turns
+  }
   if (result === 'hit') {
+    checkIfShipSunk(computer, row, col, middleContainer);
     box.classList.add('hit');
     console.log('You hit! Go again.');
     // middleContainer.innerText = 'It\'s a hit! Your turn again.';
@@ -943,7 +947,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     // Check win condition after player turn
     if (!computer.gameboard.countSunkShips()) {
       console.log('You win!');
-      // removeComputerBoardListeners();
+    fadeText(middleContainer, '🏆 YOU WIN!! 🏆.')
       return;
     }
 
@@ -955,7 +959,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
 
   // Check win condition after player hit
   if (!computer.gameboard.countSunkShips()) {
-    console.log('You win!');
+    fadeText(middleContainer, '🏆 YOU WIN!! 🏆.')
     gameState.gameOver = true;
     return false;
   }
@@ -993,7 +997,6 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
 const createRandomizationHandler = (player1Board, players) => {
   return (e) => {
     if (e.target.matches('.random-placement-button')) {
-      console.log('Randomization button clicked');
       players.player1.gameboard.drawBoard();
       players.player1.setUpFleet();
       (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.drawPlayer1BoardInDOM)(players.player1, player1Board);
@@ -1001,16 +1004,6 @@ const createRandomizationHandler = (player1Board, players) => {
   };
 };
 
-// const createRandomizationHandler = (player1Board) => {
-//   return (e) => {
-//     if (e.target.matches('.random-placement-button')) {
-//       const players = createPlayers();
-//       players.player1.gameboard.drawBoard();
-//       players.player1.setUpFleet();
-//       drawPlayer1BoardInDOM(players.player1, player1Board);
-//     }
-//   };
-// };
 
 const fadeText = (element, newText) => {
   // Remove oldest message if we have 2 already
@@ -1028,7 +1021,12 @@ const fadeText = (element, newText) => {
   textEl.classList.toggle('visible');
 };
 
-
+const checkIfShipSunk = (player, row, col, middleContainer) => {
+	const shipHit = player.gameboard.board[row][col];
+	if (shipHit.isSunk === true) {
+    fadeText(middleContainer, 'Yey, you sank one!!')
+	}
+}
 
 // *****************
 // MAKE SURE ALL MESSAGES ARE DISPLAYED (WINNING, LOSING MSGS, ETC)
@@ -1695,7 +1693,6 @@ class Gameboard {
     return false;
 }
 
-  
   placeShip(shipType, rowIndex, colIndex, direction) {
     // Ensure ship fits within board
     if (direction === 'horizontal' && colIndex + shipType.length > 10) return false;
@@ -1716,27 +1713,50 @@ class Gameboard {
     return true;
 }
 
+receiveAttack(rowIndex, colIndex) {
+  let currentCell = this.board[rowIndex][colIndex];
 
-  receiveAttack(rowIndex, colIndex) {
-    let currentCell = this.board[rowIndex][colIndex];
-
-    // Check if the cell has already been hit
-    if (currentCell === 'hit' || currentCell === 'miss') {
-        console.log('Cell has already been attacked.');
-        return 'already-attacked';  // or handle appropriately
-    }
-    
-    // Check if it is a Ship
-    if (currentCell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship) {
-        currentCell.increaseNumberOfHits();
-        currentCell.determineIfSunk();
-        this.board[rowIndex][colIndex] = 'hit'; // Mark as hit
-        return 'hit';
-    } else {
-        this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
-        return 'miss';
-    }
+  // Check if the cell has already been attacked
+  if (
+    currentCell === 'miss' ||
+    (currentCell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && currentCell.hits.some(([r, c]) => r === rowIndex && c === colIndex))
+  ) {
+    console.log('Cell has already been attacked.');
+    return 'already-attacked';
   }
+
+  // If it's a Ship
+  if (currentCell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship) {
+    currentCell.increaseNumberOfHits(rowIndex, colIndex);
+    currentCell.determineIfSunk();
+    return 'hit';
+  } else {
+    this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
+    console.log('returning miss');
+    return 'miss';
+  }
+}
+
+  // receiveAttack(rowIndex, colIndex) {
+  //   let currentCell = this.board[rowIndex][colIndex];
+
+  //   // Check if the cell has already been hit
+  //   if (currentCell === 'hit' || currentCell === 'miss') {
+  //       console.log('Cell has already been attacked.');
+  //       return 'already-attacked';  // or handle appropriately
+  //   }
+    
+  //   // Check if it is a Ship
+  //   if (currentCell instanceof Ship) {
+  //       currentCell.increaseNumberOfHits();
+  //       currentCell.determineIfSunk();
+  //       this.board[rowIndex][colIndex] = 'hit'; // Mark as hit
+  //       return 'hit';
+  //   } else {
+  //       this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
+  //       return 'miss';
+  //   }
+  // }
 
   countSunkShips() {
     let count = 0;
@@ -1837,17 +1857,19 @@ class Ship {
     this.numberOfHits = 0;
     this.isSunk = false;
     this.name = name;
+    this.hits = [];
   }
-  increaseNumberOfHits () {
+  increaseNumberOfHits(row, col) {
     this.numberOfHits++
+    this.hits.push([row, col]);
   }
 
   determineIfSunk() {
     if (this.numberOfHits === this.length) {
       this.isSunk = true;
       console.log('ship sunk');
+      console.log(this.hits);
     }
-    
   }
 }
 

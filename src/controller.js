@@ -19,7 +19,6 @@ const createPlayers = () => {
 }
 
 export const initialize = () => {
-  console.log('initialize called');
 
   const main = makeElement('div', 'main', document.body, 'test');
   const player1Board = makeElement('div', 'player1-board', main, 'player-1board');
@@ -87,12 +86,17 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     computer.gameboard.board[row][col] === 'hit' ||
     computer.gameboard.board[row][col] === 'miss'
   ) {
-    console.log('Already attacked here.');
+    fadeText(middleContainer, 'Already attacked there. Try again.')
     return;
   }
-
+  
   const result = computer.gameboard.receiveAttack(row, col);
+  if (result === 'already-attacked') {
+    fadeText(middleContainer, 'Already attacked there. Try again.')
+    return; // do nothing, don't switch turns
+  }
   if (result === 'hit') {
+    checkIfShipSunk(computer, row, col, middleContainer);
     box.classList.add('hit');
     console.log('You hit! Go again.');
     // middleContainer.innerText = 'It\'s a hit! Your turn again.';
@@ -105,7 +109,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     // Check win condition after player turn
     if (!computer.gameboard.countSunkShips()) {
       console.log('You win!');
-      // removeComputerBoardListeners();
+    fadeText(middleContainer, '🏆 YOU WIN!! 🏆.')
       return;
     }
 
@@ -117,7 +121,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
 
   // Check win condition after player hit
   if (!computer.gameboard.countSunkShips()) {
-    console.log('You win!');
+    fadeText(middleContainer, '🏆 YOU WIN!! 🏆.')
     gameState.gameOver = true;
     return false;
   }
@@ -155,7 +159,6 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
 const createRandomizationHandler = (player1Board, players) => {
   return (e) => {
     if (e.target.matches('.random-placement-button')) {
-      console.log('Randomization button clicked');
       players.player1.gameboard.drawBoard();
       players.player1.setUpFleet();
       drawPlayer1BoardInDOM(players.player1, player1Board);
@@ -163,16 +166,6 @@ const createRandomizationHandler = (player1Board, players) => {
   };
 };
 
-// const createRandomizationHandler = (player1Board) => {
-//   return (e) => {
-//     if (e.target.matches('.random-placement-button')) {
-//       const players = createPlayers();
-//       players.player1.gameboard.drawBoard();
-//       players.player1.setUpFleet();
-//       drawPlayer1BoardInDOM(players.player1, player1Board);
-//     }
-//   };
-// };
 
 const fadeText = (element, newText) => {
   // Remove oldest message if we have 2 already
@@ -190,7 +183,12 @@ const fadeText = (element, newText) => {
   textEl.classList.toggle('visible');
 };
 
-
+const checkIfShipSunk = (player, row, col, middleContainer) => {
+	const shipHit = player.gameboard.board[row][col];
+	if (shipHit.isSunk === true) {
+    fadeText(middleContainer, 'Yey, you sank one!!')
+	}
+}
 
 // *****************
 // MAKE SURE ALL MESSAGES ARE DISPLAYED (WINNING, LOSING MSGS, ETC)
