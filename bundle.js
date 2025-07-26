@@ -875,7 +875,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Player */ "./src/Player.js");
 /* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ship */ "./src/ship.js");
-/* harmony import */ var _cache_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cache-dom */ "./src/cache-dom.js");
+/* harmony import */ var _sounds__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sounds */ "./src/sounds.js");
+/* harmony import */ var _cache_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./cache-dom */ "./src/cache-dom.js");
+
+
 
 
 
@@ -896,12 +899,12 @@ const createPlayers = () => {
 }
 
 const initialize = () => {
-  const main = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('div', 'main', document.body);
-  const headerEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('h1', 'header-element', main, 'BattleShip');
-  const player1Board = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('div', 'player1-board', main, 'player-1board');
-  const randomPlacementEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('button', 'random-placement-button', main, 'randomize placement' )
-  const middleContainer = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('div', 'middle-container', main)
-  const computerBoard = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('div', 'computer-board', main);
+  const main = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'main', document.body);
+  const headerEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('h1', 'header-element', main, 'BattleShip');
+  const player1Board = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'player1-board', main, 'player-1board');
+  const randomPlacementEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('button', 'random-placement-button', main, 'randomize placement' )
+  const middleContainer = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'middle-container', main)
+  const computerBoard = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'computer-board', main);
  
   const players = createPlayers();
 
@@ -921,7 +924,7 @@ const initialize = () => {
   // Draw boards visually
   // console.log(players.player1);
   // console.log(player1Board);
-  (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.drawPlayer1BoardInDOM)(players.player1, player1Board);
+  (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.drawPlayer1BoardInDOM)(players.player1, player1Board);
   // drawComputerBoardInDOM(players.computer, computerBoard);
 
   const gameState = {
@@ -941,6 +944,7 @@ const initialize = () => {
 
     if (playerMissed) {
         isPlayerTurn = false;
+        // playSound(playerMissed);
         setTimeout(() => {
           console.log("middleContainer:", middleContainer);
             computerTurn(players.player1, players.computer, player1Board, computerBoard, gameState, middleContainer);
@@ -957,18 +961,19 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
   const box = e.target;
   const row = Number(box.dataset.row);
   const col = Number(box.dataset.col);
-
+  const coordsHit = computer.gameboard.board[row][col];
   // Prevent attacking same spot twice
-  // console.log(computer.gameboard);
   if (
-    computer.gameboard.board[row][col] === 'hit' ||
-    computer.gameboard.board[row][col] === 'miss'
+    coordsHit === 'hit' ||
+    coordsHit === 'miss'
   ) {
     fadeText(middleContainer, 'Already attacked there. Try again.')
     return;
   }
-
+  
   const result = computer.gameboard.receiveAttack(row, col);
+
+
   if (result === 'already-attacked') {
     fadeText(middleContainer, 'Already attacked there. Try again.')
     return; // do nothing, don't switch turns
@@ -977,12 +982,14 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     checkIfShipSunk(computer, row, col, middleContainer);
     box.classList.add('hit');
     console.log('You hit! Go again.');
-    // middleContainer.innerText = 'It\'s a hit! Your turn again.';
     fadeText(middleContainer, 'It\'s a hit! Your turn again.')
+    playSound(result, coordsHit);
+
   } else {
     box.classList.add('miss');
     console.log("You missed! Computer's turn.");
     fadeText(middleContainer, 'You missed. It\'s the computer\'s turn.')
+    playSound(result);
 
     // Check win condition after player turn
     if (!computer.gameboard.countSunkShips()) {
@@ -1010,7 +1017,7 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
     if (gameState.gameOver) return;
 
     const result = computer.computerAttack(player1);
-    (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.drawPlayer1BoardInDOM)(player1, player1Board);
+    (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.drawPlayer1BoardInDOM)(player1, player1Board);
 
     if (!player1.gameboard.countSunkShips()) {
       console.log('Computer wins!');
@@ -1039,21 +1046,20 @@ const createRandomizationHandler = (player1Board, players) => {
     if (e.target.matches('.random-placement-button')) {
       players.player1.gameboard.drawBoard();
       players.player1.setUpFleet();
-      (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.drawPlayer1BoardInDOM)(players.player1, player1Board);
+      (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.drawPlayer1BoardInDOM)(players.player1, player1Board);
     }
   };
 };
 
 const handleStartGameClick = (main, players, computerBoard) => {
-  const startGameEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('button', 'start-game-button', main, 'Start Game')
+  const startGameEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('button', 'start-game-button', main, 'Start Game')
   const randomizePlacementEl = document.querySelector('.random-placement-button');
   startGameEl.addEventListener('click', (e) => {
     if (e.target.matches('.start-game-button')) {
       console.log('clicked');
       randomizePlacementEl.disabled = true;
       startGameEl.disabled = true;
-      (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.drawComputerBoardInDOM)(players.computer, computerBoard);
-
+      (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.drawComputerBoardInDOM)(players.computer, computerBoard);
     }
   });
 }
@@ -1066,7 +1072,7 @@ const fadeText = (element, newText) => {
   }
 
   // Create new message
-  const textEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_2__.makeElement)('div', 'text-updates', element);
+  const textEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'text-updates', element);
   textEl.textContent = newText;
 
   // Trigger animation
@@ -1081,6 +1087,26 @@ const checkIfShipSunk = (player, row, col, middleContainer) => {
 	}
 }
 
+const playSound = (result, coordsHit) => {
+  const missSound = new Audio(_sounds__WEBPACK_IMPORTED_MODULE_2__.miss);
+  const explosion1Sound = new Audio(_sounds__WEBPACK_IMPORTED_MODULE_2__.explosion1);
+  const explosion2Sound = new Audio(_sounds__WEBPACK_IMPORTED_MODULE_2__.explosion2);
+  if (result === 'miss') {
+    missSound.play();
+  }
+  if (result === 'hit') {
+    explosion1Sound.play();
+  }
+  if (coordsHit instanceof _ship__WEBPACK_IMPORTED_MODULE_1__.Ship && coordsHit.isSunk === true) {
+    explosion2Sound.play();
+  }
+}
+
+// const playSunkShipSound = (coordsHit) {
+//   if (coordsHit instanceof Ship && coordsHit.isSunk === true) {
+    
+//   }
+// }
 // *****************
 // MAKE SURE ALL MESSAGES ARE DISPLAYED (WINNING, LOSING MSGS, ETC)
 // DISABLE THE BUTTON AFTER THE GAME STARTS.
@@ -1766,28 +1792,30 @@ class Gameboard {
     return true;
 }
 
-receiveAttack(rowIndex, colIndex) {
-  let currentCell = this.board[rowIndex][colIndex];
+  receiveAttack(rowIndex, colIndex) {
+    let currentCell = this.board[rowIndex][colIndex];
+    // Check if the cell has already been attacked
+    if (
+      currentCell === 'miss' ||
+      (currentCell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && currentCell.hits.some(([r, c]) => r === rowIndex && c === colIndex))
+    ) {
+      console.log('Cell has already been attacked.');
+      return 'already-attacked';
+    }
 
-  // Check if the cell has already been attacked
-  if (
-    currentCell === 'miss' ||
-    (currentCell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && currentCell.hits.some(([r, c]) => r === rowIndex && c === colIndex))
-  ) {
-    console.log('Cell has already been attacked.');
-    return 'already-attacked';
+    // If it's a Ship
+    if (currentCell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship) {
+      currentCell.increaseNumberOfHits(rowIndex, colIndex);
+      currentCell.determineIfSunk();
+      return 'hit';
+    } else {
+      this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
+      return 'miss';
+    }
   }
 
-  // If it's a Ship
-  if (currentCell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship) {
-    currentCell.increaseNumberOfHits(rowIndex, colIndex);
-    currentCell.determineIfSunk();
-    return 'hit';
-  } else {
-    this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
-    return 'miss';
-  }
-}
+  
+
 
   // receiveAttack(rowIndex, colIndex) {
   //   let currentCell = this.board[rowIndex][colIndex];
@@ -1841,6 +1869,18 @@ receiveAttack(rowIndex, colIndex) {
     })
     return coordinates;
   }
+
+  // getShipCoordinates(ship) {
+  //   const coordinates = []
+  //   this.board.forEach((row, rowIndex) => {
+  //     row.forEach((col, colIndex) => {
+  //       if (col === ship) {
+  //         coordinates.push([rowIndex, colIndex])
+  //       }
+  //     })
+  //   })
+  //   return coordinates;
+  // }
 
   getPotentialShipCoordinates(length, startRow, startCol, orientation) {
     const coordinates = [];
@@ -1926,6 +1966,64 @@ class Ship {
 
 /***/ }),
 
+/***/ "./src/sounds.js":
+/*!***********************!*\
+  !*** ./src/sounds.js ***!
+  \***********************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   explosion1: () => (/* reexport default export from named module */ _sounds_explosion1_mp3__WEBPACK_IMPORTED_MODULE_0__),
+/* harmony export */   explosion2: () => (/* reexport default export from named module */ _sounds_explosion2_mp3__WEBPACK_IMPORTED_MODULE_1__),
+/* harmony export */   miss: () => (/* reexport default export from named module */ _sounds_miss_mp3__WEBPACK_IMPORTED_MODULE_2__)
+/* harmony export */ });
+/* harmony import */ var _sounds_explosion1_mp3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sounds/explosion1.mp3 */ "./src/sounds/explosion1.mp3");
+/* harmony import */ var _sounds_explosion2_mp3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sounds/explosion2.mp3 */ "./src/sounds/explosion2.mp3");
+/* harmony import */ var _sounds_miss_mp3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sounds/miss.mp3 */ "./src/sounds/miss.mp3");
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/sounds/explosion1.mp3":
+/*!***********************************!*\
+  !*** ./src/sounds/explosion1.mp3 ***!
+  \***********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "32fd72c16821382ea980.mp3";
+
+/***/ }),
+
+/***/ "./src/sounds/explosion2.mp3":
+/*!***********************************!*\
+  !*** ./src/sounds/explosion2.mp3 ***!
+  \***********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "47f80f8b039ff893f706.mp3";
+
+/***/ }),
+
+/***/ "./src/sounds/miss.mp3":
+/*!*****************************!*\
+  !*** ./src/sounds/miss.mp3 ***!
+  \*****************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "12b048e1efa2757a298d.mp3";
+
+/***/ }),
+
 /***/ "./src/style.css":
 /*!***********************!*\
   !*** ./src/style.css ***!
@@ -1999,6 +2097,18 @@ module.exports = content && content.locals || {};
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -2013,6 +2123,29 @@ module.exports = content && content.locals || {};
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript && document.currentScript.tagName.toUpperCase() === 'SCRIPT')
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/^blob:/, "").replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/nonce */
