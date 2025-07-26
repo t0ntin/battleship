@@ -11,11 +11,11 @@ export class Player  {
 
   setUpFleet() {
     const ships = [
-      new Ship(1, 'carrier'),
-      new Ship(1, 'battleship'),
-      new Ship(1, 'cruiser'),
-      new Ship(1, 'submarine'),
-      new Ship(1, 'destroyer'),
+      new Ship(5, 'carrier'),
+      new Ship(5, 'battleship'),
+      new Ship(5, 'cruiser'),
+      new Ship(5, 'submarine'),
+      new Ship(5, 'destroyer'),
     ];
 
     ships.forEach(shipType => {

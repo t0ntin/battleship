@@ -20,11 +20,12 @@ const createPlayers = () => {
 
 export const initialize = () => {
 
-  const main = makeElement('div', 'main', document.body, 'test');
+  const main = makeElement('div', 'main', document.body);
   const player1Board = makeElement('div', 'player1-board', main, 'player-1board');
   const randomPlacementEl = makeElement('button', 'random-placement-button', main, 'randomize placement' )
   const middleContainer = makeElement('div', 'middle-container', main)
   const computerBoard = makeElement('div', 'computer-board', main, 'computer-board');
+ 
   const players = createPlayers();
 
   const handleRandomization = createRandomizationHandler(player1Board, players);
@@ -70,7 +71,7 @@ export const initialize = () => {
         }, 500);
     }
 });
-
+handleStartGameClick(main);
 
   return {player1: players.player1, computer: players.computer};
 }
@@ -89,7 +90,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
     fadeText(middleContainer, 'Already attacked there. Try again.')
     return;
   }
-  
+
   const result = computer.gameboard.receiveAttack(row, col);
   if (result === 'already-attacked') {
     fadeText(middleContainer, 'Already attacked there. Try again.')
@@ -166,6 +167,17 @@ const createRandomizationHandler = (player1Board, players) => {
   };
 };
 
+const handleStartGameClick = (main) => {
+  const startGameEl = makeElement('button', 'start-game-button', main, 'Start Game')
+  const randomizePlacementEl = document.querySelector('.random-placement-button');
+  startGameEl.addEventListener('click', (e) => {
+    if (e.target.matches('.start-game-button')) {
+      console.log('clicked');
+      randomizePlacementEl.disabled = true;
+      startGameEl.disabled = true;
+    }
+  });
+}
 
 const fadeText = (element, newText) => {
   // Remove oldest message if we have 2 already

@@ -67,7 +67,6 @@ receiveAttack(rowIndex, colIndex) {
     return 'hit';
   } else {
     this.board[rowIndex][colIndex] = 'miss'; // Mark as miss
-    console.log('returning miss');
     return 'miss';
   }
 }

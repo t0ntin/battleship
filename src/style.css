@@ -5,22 +5,22 @@
   list-style: none;
 }
 
-
-.title {
-  color: red;
-}
-
 body {
   background-color: rgb(36, 36, 36);
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: left;
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
   gap: 15px;
+  max-width: 360px;
+  height: 100vh;
 }
 
 .player1-board, .computer-board{
@@ -31,6 +31,16 @@ body {
   height: 290px;
   /* border: 1px, solid rgb(179, 177, 177); */
 
+}
+
+.player1-board {
+  grid-row: 2 / 2;
+  grid-column: 2 / 2;
+}
+
+.computer-board {
+  grid-row: 5 / 6;
+  grid-column: 2 / 2;
 }
 
 .box {
@@ -44,16 +54,21 @@ body {
 }
 
 .middle-container {
-  width: auto;
+  width: 100%;
   height: 57px; 
+  background-color: rgba(0, 0, 0, 0.55);
   /* height: 100px; */
-  border: 1px solid white;
+  border: none;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   /* overflow: none;  */
   position: relative; 
   line-height: 19px; /* Half container height */
+  grid-row: 3 / 3;
+  grid-column: 2 / 2;
+  align-self: center;
 }
 
 /* .middle-container {
@@ -131,7 +146,7 @@ body {
 }
 
 .hit {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(0, 0, 0);
 }
 
 .miss {
@@ -150,7 +165,7 @@ body {
   background-color: rgb(255, 0, 0);
 }
 
-.random-placement-button {
+.random-placement-button, .start-game-button {
   width: 170px;
   height: 30px;
   padding: 3px 3px;
@@ -164,16 +179,24 @@ body {
 
 }
 
-.random-placement-button:hover {
+.random-placement-button {
+  grid-row: 4 / 5;
+  grid-column: 2 / 2;
+}
+
+.start-game-button {
+  grid-row: 6 / 7;
+  grid-column: 2 / 2;
+}
+
+.random-placement-button:hover, .start-game-button:hover {
   background-color: rgb(53, 52, 52);
 }
 
-/* .text-updates {
-  transition: opacity 0.5s;
-  opacity: 0;
+.random-placement-button:disabled, .start-game-button:disabled {
+  opacity: 0.3;
+}
 
-
-} */
 
 /* Message element base styles */
 .text-updates {

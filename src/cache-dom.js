@@ -60,12 +60,19 @@ export const drawPlayer1BoardInDOM = (player1, player1Board) => {
       if (cell instanceof Ship && cell.name === 'destroyer') {
         element.classList.add('destroyer'); // 🩶 show ships visually
       }
-      if (cell === 'hit') {
-        element.classList.add('hit');
-      }
+      // if (cell === 'hit') {
+      //   element.classList.add('hit');
+      // }
       if (cell === 'miss') {
         element.classList.add('miss');
       }
+      if (
+        cell instanceof Ship &&
+        cell.hits.some(([r, c]) => r === rowIndex && c === colIndex)
+      ) {
+        element.classList.add('hit');
+      }
+      
       player1Board.append(element);
     });
   });

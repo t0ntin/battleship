@@ -15,7 +15,6 @@ export class Ship {
     if (this.numberOfHits === this.length) {
       this.isSunk = true;
       console.log('ship sunk');
-      console.log(this.hits);
     }
   }
 }
