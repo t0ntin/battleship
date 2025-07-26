@@ -19,12 +19,12 @@ const createPlayers = () => {
 }
 
 export const initialize = () => {
-
   const main = makeElement('div', 'main', document.body);
+  const headerEl = makeElement('h1', 'header-element', main, 'BattleShip');
   const player1Board = makeElement('div', 'player1-board', main, 'player-1board');
   const randomPlacementEl = makeElement('button', 'random-placement-button', main, 'randomize placement' )
   const middleContainer = makeElement('div', 'middle-container', main)
-  const computerBoard = makeElement('div', 'computer-board', main, 'computer-board');
+  const computerBoard = makeElement('div', 'computer-board', main);
  
   const players = createPlayers();
 
@@ -45,7 +45,7 @@ export const initialize = () => {
   // console.log(players.player1);
   // console.log(player1Board);
   drawPlayer1BoardInDOM(players.player1, player1Board);
-  drawComputerBoardInDOM(players.computer, computerBoard);
+  // drawComputerBoardInDOM(players.computer, computerBoard);
 
   const gameState = {
     isPlayerTurn: true,
@@ -71,7 +71,7 @@ export const initialize = () => {
         }, 500);
     }
 });
-handleStartGameClick(main);
+handleStartGameClick(main, players, computerBoard);
 
   return {player1: players.player1, computer: players.computer};
 }
@@ -167,7 +167,7 @@ const createRandomizationHandler = (player1Board, players) => {
   };
 };
 
-const handleStartGameClick = (main) => {
+const handleStartGameClick = (main, players, computerBoard) => {
   const startGameEl = makeElement('button', 'start-game-button', main, 'Start Game')
   const randomizePlacementEl = document.querySelector('.random-placement-button');
   startGameEl.addEventListener('click', (e) => {
@@ -175,6 +175,8 @@ const handleStartGameClick = (main) => {
       console.log('clicked');
       randomizePlacementEl.disabled = true;
       startGameEl.disabled = true;
+      drawComputerBoardInDOM(players.computer, computerBoard);
+
     }
   });
 }
