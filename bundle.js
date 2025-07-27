@@ -124,23 +124,19 @@ body {
 }
 
 .carrier {
-  background-color: deepskyblue;
+  background-color:red;
 }
 
 .battleship {
- background-color: orange;
+ background-color: #522258;
 }
 
 .cruiser {
-  background-color: blueviolet;
+  background-color: #8C3061;
 }
 
-.submarine {
-  background-color: cornflowerblue;
-}
-
-.destroyer {
-  background-color: fuchsia;
+.submarine, .destroyer {
+  background-color: #C63C51;
 }
 
 #carrier {
@@ -259,7 +255,7 @@ body {
   opacity: 1;
   transform: translateY(0);
   /* color: red; */
-}`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;EACE,SAAS;EACT,UAAU;EACV,sBAAsB;EACtB,gBAAgB;AAClB;;AAEA;EACE,iCAAiC;EACjC,YAAY;EACZ,aAAa;EACb,sBAAsB;EACtB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,kCAAkC;EAClC,qCAAqC;EACrC,qBAAqB;EACrB,SAAS;EACT,gBAAgB;EAChB,aAAa;AACf;;AAEA;EACE,6BAA6B;EAC7B,eAAe;EACf,kBAAkB;EAClB,8CAA8C;EAC9C,eAAe;EACf,kDAAkD;AACpD;;AAEA;EACE,aAAa;EACb,mCAAmC;EACnC,sCAAsC;EACtC,YAAY;EACZ,aAAa;EACb,2CAA2C;;AAE7C;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,qCAAqC;EACrC,0CAA0C;EAC1C;iBACe;EACf,UAAU;EACV,WAAW;EACX,yBAAyB;AAC3B;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,qCAAqC;EACrC,mBAAmB;EACnB,YAAY;EACZ,mBAAmB;EACnB,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,qBAAqB;EACrB,kBAAkB;EAClB,iBAAiB,EAAE,0BAA0B;EAC7C,eAAe;EACf,kBAAkB;EAClB,kBAAkB;AACpB;;AAEA;;;;;;;;;;;;;;;;GAgBG;;;AAGH;EACE,6BAA6B;EAC7B,8CAA8C;EAC9C,4BAA4B;;;EAG5B;iBACe;AACjB;;AAEA;EACE,6BAA6B;AAC/B;;AAEA;CACC,wBAAwB;AACzB;;AAEA;EACE,4BAA4B;AAC9B;;AAEA;EACE,gCAAgC;AAClC;;AAEA;EACE,yBAAyB;AAC3B;;AAEA;EACE,YAAY;EACZ,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,8BAA8B;AAChC;;AAEA;EACE,sBAAsB;AACxB;;AAEA;EACE,6CAA6C,EAAE,+BAA+B;AAChF;;AAEA;EACE,uBAAuB;AACzB;;AAEA;EACE,gCAAgC;AAClC;;AAEA;EACE,YAAY;EACZ,YAAY;EACZ,gBAAgB;EAChB,uBAAuB,EAAE,SAAS;EAClC,YAAY;EACZ,uBAAuB;EACvB,kBAAkB;EAClB,eAAe;EACf,eAAe;EACf,sCAAsC;;AAExC;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,iCAAiC;AACnC;;AAEA;EACE,YAAY;AACd;;;AAGA,gCAAgC;AAChC;EACE,kBAAkB;EAClB,WAAW;EACX,kBAAkB;EAClB,UAAU;EACV,8BAA8B;EAC9B;;4BAE0B;EAC1B,oBAAoB;AACtB;;AAEA,oCAAoC;AACpC;EACE,SAAS;EACT,oCAAoC;EACpC,0BAA0B;EAC1B;;8BAE4B;EAC5B,UAAU;AACZ;;AAEA;;EAEE,SAAS;EACT,wBAAwB;AAC1B;;AAEA;EACE,MAAM;AACR;;AAEA;EACE,UAAU;EACV,wBAAwB;EACxB,gBAAgB;AAClB","sourcesContent":["* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n  list-style: none;\n}\n\nbody {\n  background-color: rgb(36, 36, 36);\n  color: white;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.main {\n  display: grid;\n  grid-template-rows: repeat(7, 1fr);\n  grid-template-columns: repeat(3, 1fr);\n  justify-items: center;\n  gap: 15px;\n  max-width: 360px;\n  height: 100vh;\n}\n\n.header-element {\n  color: rgba(255, 0, 0, 0.754);\n  grid-row: 1 / 2;\n  grid-column: 2 / 2;\n  font-family: 'Courier New', Courier, monospace;\n  font-size: 3rem;\n  text-shadow: 4px 3px 2px rgba(255, 255, 255, 0.45);\n}\n\n.player1-board, .computer-board{\n  display: grid;\n  grid-template-rows: repeat(10, 1fr);\n  grid-template-columns: repeat(10, 1fr);\n  width: 290px;  \n  height: 290px;\n  /* border: 1px, solid rgb(179, 177, 177); */\n\n}\n\n.player1-board {\n  grid-row: 2 / 2;\n  grid-column: 2 / 2;\n}\n\n.computer-board {\n  grid-row: 5 / 6;\n  grid-column: 2 / 2;\n}\n\n.box {\n  border: 1px, solid rgb(179, 177, 177);\n  /* outline:1px solid rgb(179, 177, 177); */\n  /* width: 100%;\n  height: 15px; */\n  width: 92%;\n  height: 92%;\n  background-color: #1E3F66;\n}\n\n.middle-container {\n  width: 100%;\n  height: 57px; \n  background-color: rgba(0, 0, 0, 0.55);\n  /* height: 100px; */\n  border: none;\n  border-radius: 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  /* overflow: none;  */\n  position: relative; \n  line-height: 19px; /* Half container height */\n  grid-row: 3 / 3;\n  grid-column: 2 / 2;\n  align-self: center;\n}\n\n/* .middle-container {\n  width: auto;\n  height: 38px;\n  border: 1px solid white;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: flex-start;\n  text-align: center;\n  overflow-y: auto;\n  line-height: 1.2;\n  height: 38px; \n  transition: opacity 0.5s ease-in-out;\n  opacity: 1; \n\n  \n} */\n\n\n.ship {\n  /* border: 1px solid white; */\n  /* box-shadow: 0 0 0 2px rgb(253, 253, 253); */\n  background-color: blueviolet;\n\n\n  /* width: 20px;\n  height: 20px; */\n}\n\n.carrier {\n  background-color: deepskyblue;\n}\n\n.battleship {\n background-color: orange;\n}\n\n.cruiser {\n  background-color: blueviolet;\n}\n\n.submarine {\n  background-color: cornflowerblue;\n}\n\n.destroyer {\n  background-color: fuchsia;\n}\n\n#carrier {\n  width: 100px;\n  height: 14px;\n}\n\n#battleship {\n  width: 80px;\n  height: 14px;\n}\n\n#cruiser {\n  width: 60px;\n  height: 14px;\n}\n\n#submarine {\n  width: 60px;\n  height: 14px;\n}\n\n#destroyer {\n  width: 40px;\n  height: 14px;\n}\n\n.hit {\n  background-color: rgb(0, 0, 0);\n}\n\n.miss {\n  background-color: gray;\n}\n\n.hover-preview {\n  background-color: hsla(288, 100%, 50%, 0.786); /* translucent violet overlay */\n}\n\n.valid-hover {\n  background-color: green;\n}\n\n.invalid-hover {\n  background-color: rgb(255, 0, 0);\n}\n\n.random-placement-button, .start-game-button {\n  width: 170px;\n  height: 30px;\n  padding: 3px 3px;\n  background-color: black; /* Blue */\n  color: white;\n  border: 1px solid white;\n  border-radius: 5px;\n  font-size: 16px;\n  cursor: pointer;\n  transition: background-color 0.3s ease;\n\n}\n\n.random-placement-button {\n  grid-row: 4 / 5;\n  grid-column: 2 / 2;\n}\n\n.start-game-button {\n  grid-row: 6 / 7;\n  grid-column: 2 / 2;\n}\n\n.random-placement-button:hover, .start-game-button:hover {\n  background-color: rgb(53, 52, 52);\n}\n\n.random-placement-button:disabled, .start-game-button:disabled {\n  opacity: 0.3;\n}\n\n\n/* Message element base styles */\n.text-updates {\n  position: absolute;\n  width: 100%;\n  text-align: center;\n  opacity: 0;\n  /* transform: translateY(0); */\n  transition: \n  opacity 0.5s ease-in-out,\n  transform 0.5s ease-in-out;\n  pointer-events: none; \n}\n\n/* Only animate the bottom message */\n.text-updates:nth-last-child(1) { \n  bottom: 0;\n  /* STARTS SLIGHTLY FROM THE BOTTOM */\n  transform: translateY(7px);\n  transition: \n    opacity 0.5s ease-in-out,\n    transform 0.5s ease-in-out;\n  color: red;\n}\n\n.text-updates:nth-last-child(2) { \n\n  top: 19px; \n  transform: translateY(0); \n}\n\n.text-updates:nth-last-child(3) { \n  top: 0;  \n}\n\n.text-updates.visible {\n  opacity: 1;\n  transform: translateY(0);\n  /* color: red; */\n}"],"sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;EACE,SAAS;EACT,UAAU;EACV,sBAAsB;EACtB,gBAAgB;AAClB;;AAEA;EACE,iCAAiC;EACjC,YAAY;EACZ,aAAa;EACb,sBAAsB;EACtB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,kCAAkC;EAClC,qCAAqC;EACrC,qBAAqB;EACrB,SAAS;EACT,gBAAgB;EAChB,aAAa;AACf;;AAEA;EACE,6BAA6B;EAC7B,eAAe;EACf,kBAAkB;EAClB,8CAA8C;EAC9C,eAAe;EACf,kDAAkD;AACpD;;AAEA;EACE,aAAa;EACb,mCAAmC;EACnC,sCAAsC;EACtC,YAAY;EACZ,aAAa;EACb,2CAA2C;;AAE7C;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,qCAAqC;EACrC,0CAA0C;EAC1C;iBACe;EACf,UAAU;EACV,WAAW;EACX,yBAAyB;AAC3B;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,qCAAqC;EACrC,mBAAmB;EACnB,YAAY;EACZ,mBAAmB;EACnB,aAAa;EACb,sBAAsB;EACtB,mBAAmB;EACnB,qBAAqB;EACrB,kBAAkB;EAClB,iBAAiB,EAAE,0BAA0B;EAC7C,eAAe;EACf,kBAAkB;EAClB,kBAAkB;AACpB;;AAEA;;;;;;;;;;;;;;;;GAgBG;;;AAGH;EACE,6BAA6B;EAC7B,8CAA8C;EAC9C,4BAA4B;;;EAG5B;iBACe;AACjB;;AAEA;EACE,oBAAoB;AACtB;;AAEA;CACC,yBAAyB;AAC1B;;AAEA;EACE,yBAAyB;AAC3B;;AAEA;EACE,yBAAyB;AAC3B;;AAEA;EACE,YAAY;EACZ,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,8BAA8B;AAChC;;AAEA;EACE,sBAAsB;AACxB;;AAEA;EACE,6CAA6C,EAAE,+BAA+B;AAChF;;AAEA;EACE,uBAAuB;AACzB;;AAEA;EACE,gCAAgC;AAClC;;AAEA;EACE,YAAY;EACZ,YAAY;EACZ,gBAAgB;EAChB,uBAAuB,EAAE,SAAS;EAClC,YAAY;EACZ,uBAAuB;EACvB,kBAAkB;EAClB,eAAe;EACf,eAAe;EACf,sCAAsC;;AAExC;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,iCAAiC;AACnC;;AAEA;EACE,YAAY;AACd;;;AAGA,gCAAgC;AAChC;EACE,kBAAkB;EAClB,WAAW;EACX,kBAAkB;EAClB,UAAU;EACV,8BAA8B;EAC9B;;4BAE0B;EAC1B,oBAAoB;AACtB;;AAEA,oCAAoC;AACpC;EACE,SAAS;EACT,oCAAoC;EACpC,0BAA0B;EAC1B;;8BAE4B;EAC5B,UAAU;AACZ;;AAEA;;EAEE,SAAS;EACT,wBAAwB;AAC1B;;AAEA;EACE,MAAM;AACR;;AAEA;EACE,UAAU;EACV,wBAAwB;EACxB,gBAAgB;AAClB","sourcesContent":["* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n  list-style: none;\n}\n\nbody {\n  background-color: rgb(36, 36, 36);\n  color: white;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.main {\n  display: grid;\n  grid-template-rows: repeat(7, 1fr);\n  grid-template-columns: repeat(3, 1fr);\n  justify-items: center;\n  gap: 15px;\n  max-width: 360px;\n  height: 100vh;\n}\n\n.header-element {\n  color: rgba(255, 0, 0, 0.754);\n  grid-row: 1 / 2;\n  grid-column: 2 / 2;\n  font-family: 'Courier New', Courier, monospace;\n  font-size: 3rem;\n  text-shadow: 4px 3px 2px rgba(255, 255, 255, 0.45);\n}\n\n.player1-board, .computer-board{\n  display: grid;\n  grid-template-rows: repeat(10, 1fr);\n  grid-template-columns: repeat(10, 1fr);\n  width: 290px;  \n  height: 290px;\n  /* border: 1px, solid rgb(179, 177, 177); */\n\n}\n\n.player1-board {\n  grid-row: 2 / 2;\n  grid-column: 2 / 2;\n}\n\n.computer-board {\n  grid-row: 5 / 6;\n  grid-column: 2 / 2;\n}\n\n.box {\n  border: 1px, solid rgb(179, 177, 177);\n  /* outline:1px solid rgb(179, 177, 177); */\n  /* width: 100%;\n  height: 15px; */\n  width: 92%;\n  height: 92%;\n  background-color: #1E3F66;\n}\n\n.middle-container {\n  width: 100%;\n  height: 57px; \n  background-color: rgba(0, 0, 0, 0.55);\n  /* height: 100px; */\n  border: none;\n  border-radius: 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  /* overflow: none;  */\n  position: relative; \n  line-height: 19px; /* Half container height */\n  grid-row: 3 / 3;\n  grid-column: 2 / 2;\n  align-self: center;\n}\n\n/* .middle-container {\n  width: auto;\n  height: 38px;\n  border: 1px solid white;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: flex-start;\n  text-align: center;\n  overflow-y: auto;\n  line-height: 1.2;\n  height: 38px; \n  transition: opacity 0.5s ease-in-out;\n  opacity: 1; \n\n  \n} */\n\n\n.ship {\n  /* border: 1px solid white; */\n  /* box-shadow: 0 0 0 2px rgb(253, 253, 253); */\n  background-color: blueviolet;\n\n\n  /* width: 20px;\n  height: 20px; */\n}\n\n.carrier {\n  background-color:red;\n}\n\n.battleship {\n background-color: #522258;\n}\n\n.cruiser {\n  background-color: #8C3061;\n}\n\n.submarine, .destroyer {\n  background-color: #C63C51;\n}\n\n#carrier {\n  width: 100px;\n  height: 14px;\n}\n\n#battleship {\n  width: 80px;\n  height: 14px;\n}\n\n#cruiser {\n  width: 60px;\n  height: 14px;\n}\n\n#submarine {\n  width: 60px;\n  height: 14px;\n}\n\n#destroyer {\n  width: 40px;\n  height: 14px;\n}\n\n.hit {\n  background-color: rgb(0, 0, 0);\n}\n\n.miss {\n  background-color: gray;\n}\n\n.hover-preview {\n  background-color: hsla(288, 100%, 50%, 0.786); /* translucent violet overlay */\n}\n\n.valid-hover {\n  background-color: green;\n}\n\n.invalid-hover {\n  background-color: rgb(255, 0, 0);\n}\n\n.random-placement-button, .start-game-button {\n  width: 170px;\n  height: 30px;\n  padding: 3px 3px;\n  background-color: black; /* Blue */\n  color: white;\n  border: 1px solid white;\n  border-radius: 5px;\n  font-size: 16px;\n  cursor: pointer;\n  transition: background-color 0.3s ease;\n\n}\n\n.random-placement-button {\n  grid-row: 4 / 5;\n  grid-column: 2 / 2;\n}\n\n.start-game-button {\n  grid-row: 6 / 7;\n  grid-column: 2 / 2;\n}\n\n.random-placement-button:hover, .start-game-button:hover {\n  background-color: rgb(53, 52, 52);\n}\n\n.random-placement-button:disabled, .start-game-button:disabled {\n  opacity: 0.3;\n}\n\n\n/* Message element base styles */\n.text-updates {\n  position: absolute;\n  width: 100%;\n  text-align: center;\n  opacity: 0;\n  /* transform: translateY(0); */\n  transition: \n  opacity 0.5s ease-in-out,\n  transform 0.5s ease-in-out;\n  pointer-events: none; \n}\n\n/* Only animate the bottom message */\n.text-updates:nth-last-child(1) { \n  bottom: 0;\n  /* STARTS SLIGHTLY FROM THE BOTTOM */\n  transform: translateY(7px);\n  transition: \n    opacity 0.5s ease-in-out,\n    transform 0.5s ease-in-out;\n  color: red;\n}\n\n.text-updates:nth-last-child(2) { \n\n  top: 19px; \n  transform: translateY(0); \n}\n\n.text-updates:nth-last-child(3) { \n  top: 0;  \n}\n\n.text-updates.visible {\n  opacity: 1;\n  transform: translateY(0);\n  /* color: red; */\n}"],"sourceRoot":""}]);
 // Exports
 module.exports = ___CSS_LOADER_EXPORT___;
 
@@ -687,10 +683,10 @@ class Player  {
   setUpFleet() {
     const ships = [
       new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(5, 'carrier'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(5, 'battleship'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(5, 'cruiser'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(5, 'submarine'),
-      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(5, 'destroyer'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(4, 'battleship'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(3, 'cruiser'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(3, 'submarine'),
+      new _ship__WEBPACK_IMPORTED_MODULE_1__.Ship(2, 'destroyer'),
     ];
 
     ships.forEach(shipType => {
@@ -828,26 +824,26 @@ const drawPlayer1BoardInDOM = (player1, player1Board) => {
 
 const drawComputerBoardInDOM = (computer, computerBoard) => {
   computerBoard.innerHTML = ''; // clear before redrawing
-  computer.gameboard.board.forEach((row, rowIndex) => {   // ✅ fixed here
-    row.forEach((cell, colIndex) => {                     // ✅ fixed here
+  computer.gameboard.board.forEach((row, rowIndex) => {  
+    row.forEach((cell, colIndex) => {                     
       const element = makeElement('div', 'box');
       element.dataset.row = rowIndex;
       element.dataset.col = colIndex;
-      if (cell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && cell.name === 'carrier') {
-        element.classList.add('carrier'); // 🩶 show ships visually
-      }
-      if (cell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && cell.name === 'battleship') {
-        element.classList.add('battleship'); // 🩶 show ships visually
-      }
-      if (cell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && cell.name === 'cruiser') {
-        element.classList.add('cruiser'); // 🩶 show ships visually
-      }
-      if (cell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && cell.name === 'submarine') {
-        element.classList.add('submarine'); // 🩶 show ships visually
-      }
-      if (cell instanceof _ship__WEBPACK_IMPORTED_MODULE_0__.Ship && cell.name === 'destroyer') {
-        element.classList.add('destroyer'); // 🩶 show ships visually
-      }
+      // if (cell instanceof Ship && cell.name === 'carrier') {
+      //   element.classList.add('carrier'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'battleship') {
+      //   element.classList.add('battleship'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'cruiser') {
+      //   element.classList.add('cruiser'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'submarine') {
+      //   element.classList.add('submarine'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'destroyer') {
+      //   element.classList.add('destroyer'); // 🩶 show ships visually
+      // }
       computerBoard.append(element);
     });
   });
@@ -902,7 +898,7 @@ const initialize = () => {
   const main = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'main', document.body);
   const headerEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('h1', 'header-element', main, 'BattleShip');
   const player1Board = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'player1-board', main, 'player-1board');
-  const randomPlacementEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('button', 'random-placement-button', main, 'randomize placement' )
+  const randomPlacementEl = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('button', 'random-placement-button', main, 'Randomize Board' )
   const middleContainer = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'middle-container', main)
   const computerBoard = (0,_cache_dom__WEBPACK_IMPORTED_MODULE_3__.makeElement)('div', 'computer-board', main);
  
@@ -944,7 +940,7 @@ const initialize = () => {
 
     if (playerMissed) {
         isPlayerTurn = false;
-        // playSound(playerMissed);
+        playSound(playerMissed);
         setTimeout(() => {
           console.log("middleContainer:", middleContainer);
             computerTurn(players.player1, players.computer, player1Board, computerBoard, gameState, middleContainer);
@@ -1013,6 +1009,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
 }
 
 function computerTurn(player1, computer, player1Board, computerBoard, gameState, middleContainer) {
+  console.log(computer.gameboard.printBoard());
   function attackLoop() {
     if (gameState.gameOver) return;
 
@@ -1027,6 +1024,7 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
     }
 
     if (result === 'hit') {
+      playSound(result);
       console.log('Computer hit! Computer goes again.');
       fadeText(middleContainer, "Computer hit! It's the computer's turn.");
 
@@ -1034,6 +1032,7 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
       setTimeout(attackLoop, 500);
     } else {
       console.log('Computer missed! Your turn.');
+      playSound(result);
       fadeText(middleContainer, "Computer missed! It's your turn.");
       // Return control to the player
     }
@@ -1925,7 +1924,7 @@ class Gameboard {
       }
       visual += '\n';
     }
-    // console.log(visual);
+    console.log(visual);
   }
   
 }
@@ -2020,7 +2019,7 @@ module.exports = __webpack_require__.p + "47f80f8b039ff893f706.mp3";
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-module.exports = __webpack_require__.p + "12b048e1efa2757a298d.mp3";
+module.exports = __webpack_require__.p + "8b880abd4fcd75513220.mp3";
 
 /***/ }),
 
