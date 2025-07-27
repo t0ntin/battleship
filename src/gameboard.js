@@ -181,7 +181,7 @@ export class Gameboard {
       }
       visual += '\n';
     }
-    // console.log(visual);
+    console.log(visual);
   }
   
 }

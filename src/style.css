@@ -110,23 +110,19 @@ body {
 }
 
 .carrier {
-  background-color: deepskyblue;
+  background-color:red;
 }
 
 .battleship {
- background-color: orange;
+ background-color: #522258;
 }
 
 .cruiser {
-  background-color: blueviolet;
+  background-color: #8C3061;
 }
 
-.submarine {
-  background-color: cornflowerblue;
-}
-
-.destroyer {
-  background-color: fuchsia;
+.submarine, .destroyer {
+  background-color: #C63C51;
 }
 
 #carrier {

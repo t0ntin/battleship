@@ -81,26 +81,26 @@ export const drawPlayer1BoardInDOM = (player1, player1Board) => {
 
 export const drawComputerBoardInDOM = (computer, computerBoard) => {
   computerBoard.innerHTML = ''; // clear before redrawing
-  computer.gameboard.board.forEach((row, rowIndex) => {   // ✅ fixed here
-    row.forEach((cell, colIndex) => {                     // ✅ fixed here
+  computer.gameboard.board.forEach((row, rowIndex) => {  
+    row.forEach((cell, colIndex) => {                     
       const element = makeElement('div', 'box');
       element.dataset.row = rowIndex;
       element.dataset.col = colIndex;
-      if (cell instanceof Ship && cell.name === 'carrier') {
-        element.classList.add('carrier'); // 🩶 show ships visually
-      }
-      if (cell instanceof Ship && cell.name === 'battleship') {
-        element.classList.add('battleship'); // 🩶 show ships visually
-      }
-      if (cell instanceof Ship && cell.name === 'cruiser') {
-        element.classList.add('cruiser'); // 🩶 show ships visually
-      }
-      if (cell instanceof Ship && cell.name === 'submarine') {
-        element.classList.add('submarine'); // 🩶 show ships visually
-      }
-      if (cell instanceof Ship && cell.name === 'destroyer') {
-        element.classList.add('destroyer'); // 🩶 show ships visually
-      }
+      // if (cell instanceof Ship && cell.name === 'carrier') {
+      //   element.classList.add('carrier'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'battleship') {
+      //   element.classList.add('battleship'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'cruiser') {
+      //   element.classList.add('cruiser'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'submarine') {
+      //   element.classList.add('submarine'); // 🩶 show ships visually
+      // }
+      // if (cell instanceof Ship && cell.name === 'destroyer') {
+      //   element.classList.add('destroyer'); // 🩶 show ships visually
+      // }
       computerBoard.append(element);
     });
   });

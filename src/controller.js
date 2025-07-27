@@ -24,7 +24,7 @@ export const initialize = () => {
   const main = makeElement('div', 'main', document.body);
   const headerEl = makeElement('h1', 'header-element', main, 'BattleShip');
   const player1Board = makeElement('div', 'player1-board', main, 'player-1board');
-  const randomPlacementEl = makeElement('button', 'random-placement-button', main, 'randomize placement' )
+  const randomPlacementEl = makeElement('button', 'random-placement-button', main, 'Randomize Board' )
   const middleContainer = makeElement('div', 'middle-container', main)
   const computerBoard = makeElement('div', 'computer-board', main);
  
@@ -66,7 +66,7 @@ export const initialize = () => {
 
     if (playerMissed) {
         isPlayerTurn = false;
-        // playSound(playerMissed);
+        playSound(playerMissed);
         setTimeout(() => {
           console.log("middleContainer:", middleContainer);
             computerTurn(players.player1, players.computer, player1Board, computerBoard, gameState, middleContainer);
@@ -135,6 +135,7 @@ function handlePlayerClick(e, player1, computer, player1Board, computerBoard, ga
 }
 
 function computerTurn(player1, computer, player1Board, computerBoard, gameState, middleContainer) {
+  console.log(computer.gameboard.printBoard());
   function attackLoop() {
     if (gameState.gameOver) return;
 
@@ -149,6 +150,7 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
     }
 
     if (result === 'hit') {
+      playSound(result);
       console.log('Computer hit! Computer goes again.');
       fadeText(middleContainer, "Computer hit! It's the computer's turn.");
 
@@ -156,6 +158,7 @@ function computerTurn(player1, computer, player1Board, computerBoard, gameState,
       setTimeout(attackLoop, 500);
     } else {
       console.log('Computer missed! Your turn.');
+      playSound(result);
       fadeText(middleContainer, "Computer missed! It's your turn.");
       // Return control to the player
     }
